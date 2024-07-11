@@ -22,6 +22,10 @@ https://modelscope.cn/studios/Datawhale/datawhale_spark_2024
 
 https://help.aliyun.com/zh/model-studio/user-guide/assistant-api-based-travel-assistant?spm=a2c4g.11186623.0.0.1565c560IOXHpC
 
+
+![image](https://github.com/yaosenJ/LvBanGPT/assets/147613954/f74be7b2-fc48-4c82-b903-c65c73f7b2ed)
+
+
 当遇到上面问题，运行下面命令就可
 
 ```shell
