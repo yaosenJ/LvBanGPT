@@ -21,3 +21,15 @@ https://modelscope.cn/studios/Datawhale/datawhale_spark_2024
 基于Assistant API的旅游助手的demo：
 
 https://help.aliyun.com/zh/model-studio/user-guide/assistant-api-based-travel-assistant?spm=a2c4g.11186623.0.0.1565c560IOXHpC
+
+当遇到上面问题，运行下面命令就可
+
+```shell
+git clone https://gitcode.net/miamnh/frpc_linux_amd64.git
+mv frpc_linux_amd64 frpc_linux_amd64_v0.2
+mv frpc_linux_amd64_v0.2 /root/.conda/lib/python3.11/site-packages/gradio
+cd /root/.conda/lib/python3.11/site-packages/gradio
+chmod +x frpc_linux_amd64_v0.2
+然后使用cd命令回到项目目录
+gradio app.py
+```
