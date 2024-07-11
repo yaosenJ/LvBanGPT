@@ -30,6 +30,6 @@ mv frpc_linux_amd64 frpc_linux_amd64_v0.2
 mv frpc_linux_amd64_v0.2 /root/.conda/lib/python3.11/site-packages/gradio
 cd /root/.conda/lib/python3.11/site-packages/gradio
 chmod +x frpc_linux_amd64_v0.2
-然后使用cd命令回到项目目录
+cd app.py所在目录
 gradio app.py
 ```
