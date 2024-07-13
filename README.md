@@ -37,3 +37,12 @@ chmod +x frpc_linux_amd64_v0.2
 cd app.py所在目录
 gradio app.py
 ```
+
+上传代码命令
+```shell
+ cd 对应项目一级目录/
+ git add .
+ git status(此命令选用，是用于查看状态的，可能显示一堆信息)
+ git commit -m "随便写点啥"
+ git push
+```
