@@ -1,0 +1,11 @@
+spark_ai_python
+dwspark
+cffi
+gevent
+greenlet
+pycparser
+six
+websockets
+websocket-client
+chardet
+openai
