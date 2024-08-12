@@ -151,7 +151,7 @@ gradio app.py
 
 感谢上海人工智能实验室，书生浦语大模型实战营的算力和计算平台支持！
 
-**参考资料**
+##参考资料
 
 [星火大模型 python sdk库全面使用说明](https://github.com/iflytek/spark-ai-python)  
 
