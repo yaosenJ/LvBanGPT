@@ -105,7 +105,7 @@ gradio app.py
 
 <h3 id="2-1"> 数据、模型及工具选型 </h3>
 数据集：全国各地区及景点旅游攻略pdf文本文件
-
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%95%B0%E6%8D%AE.png" alt="image-20240131182121394" style="zoom:40%;" />
 <h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
 
 
