@@ -1,6 +1,8 @@
 # “LvBan恣行” -- AI旅游助手
 
-**功能模块**
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/logo.png?raw=true" alt="image-20240131182121394" style="zoom:33%;" />
+
+ **功能模块**
 
 - 根据天气查询结果，给外出旅游建议（连接天气预报API）
 - 路径规划（飞机，火车）（相关购票app）
