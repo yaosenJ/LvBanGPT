@@ -29,7 +29,14 @@
 **项目整体功能逻辑流程图**
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="image-20240131182121394" style="zoom:100%;" />
 
+**项目演示**
+
+- 旅游规划助手
+
+
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
+
+
 
 **参考资料**
 
