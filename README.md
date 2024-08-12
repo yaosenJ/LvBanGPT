@@ -99,7 +99,7 @@ pip install -r requirements.txt
 gradio app.py
 ```
 <h3 id="1-3">PAI-DSW部署</h3>
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW.png" alt="image-20240131182121394" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW.png"  style="zoom:40%;" />
 
 <h2 id="2"> 详细指南 </h2>
 
@@ -107,12 +107,14 @@ gradio app.py
 
 - 数据集：全国各地区及景点旅游攻略pdf文本文件
   
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%95%B0%E6%8D%AE.png" alt="image-20240131182121394" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%95%B0%E6%8D%AE.png"  style="zoom:40%;" />
   
 - 大语言模型：星火大模型(Spark3.5 Max)
 - 图片理解模型：星火图片理解模型
 - 语音合成模型：星火语音合成模型
 - 向量模型：星火文本向量模型
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0.png" style="zoom:40%;" />
+  
 <h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
 
 
