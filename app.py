@@ -18,16 +18,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import re
 import time
+import json
 import numpy as np
 from text2audio.infer import audio2lip
 # 日志
 from loguru import logger
+from langchain_community.tools.tavily_search import TavilySearchResults
+import datetime
+from http import HTTPStatus
+from dashscope import Generation
+import dashscope
 # 加载讯飞的api配置
 SPARKAI_APP_ID = os.environ.get("SPARKAI_APP_ID")
 SPARKAI_API_SECRET = os.environ.get("SPARKAI_API_SECRET")
 SPARKAI_API_KEY = os.environ.get("SPARKAI_API_KEY")
 config = Config(SPARKAI_APP_ID, SPARKAI_API_KEY, SPARKAI_API_SECRET)
-
+dashscope.api_key = os.environ.get("dashscope_api_key")
 # 初始化模型
 iu = ImageUnderstanding(config)
 t2a = Text2Audio(config)
@@ -107,54 +113,54 @@ def get_embedding_pdf(text, pdf_directory):
     return city_to_pdfs
 
 
-# def load_rerank_model(model_name=rerank_model_name):
-#     """
-#     加载重排名模型。
+def load_rerank_model(model_name=rerank_model_name):
+    """
+    加载重排名模型。
     
-#     参数:
-#     - model_name (str): 模型的名称。默认为 'BAAI/bge-reranker-large'。
+    参数:
+    - model_name (str): 模型的名称。默认为 'BAAI/bge-reranker-large'。
     
-#     返回:
-#     - FlagReranker 实例。
+    返回:
+    - FlagReranker 实例。
     
-#     异常:
-#     - ValueError: 如果模型名称不在批准的模型列表中。
-#     - Exception: 如果模型加载过程中发生任何其他错误。
-#     """ 
-#     if not os.path.exists(rerank_path):
-#         os.makedirs(rerank_path, exist_ok=True)
-#     rerank_model_path = os.path.join(rerank_path, model_name.split('/')[1] + '.pkl')
-#     #print(rerank_model_path)
-#     logger.info('Loading rerank model...')
-#     if os.path.exists(rerank_model_path):
-#         try:
-#             with open(rerank_model_path , 'rb') as f:
-#                 reranker_model = pickle.load(f)
-#                 logger.info('Rerank model loaded.')
-#                 return reranker_model
-#         except Exception as e:
-#             logger.error(f'Failed to load embedding model from {rerank_model_path}') 
-#     else:
-#         try:
-#             os.system('apt install git')
-#             os.system('apt install git-lfs')
-#             os.system(f'git clone https://code.openxlab.org.cn/answer-qzd/bge_rerank.git {rerank_path}')
-#             os.system(f'cd {rerank_path} && git lfs pull')
+    异常:
+    - ValueError: 如果模型名称不在批准的模型列表中。
+    - Exception: 如果模型加载过程中发生任何其他错误。
+    """ 
+    if not os.path.exists(rerank_path):
+        os.makedirs(rerank_path, exist_ok=True)
+    rerank_model_path = os.path.join(rerank_path, model_name.split('/')[1] + '.pkl')
+    #print(rerank_model_path)
+    logger.info('Loading rerank model...')
+    if os.path.exists(rerank_model_path):
+        try:
+            with open(rerank_model_path , 'rb') as f:
+                reranker_model = pickle.load(f)
+                logger.info('Rerank model loaded.')
+                return reranker_model
+        except Exception as e:
+            logger.error(f'Failed to load embedding model from {rerank_model_path}') 
+    else:
+        try:
+            os.system('apt install git')
+            os.system('apt install git-lfs')
+            os.system(f'git clone https://code.openxlab.org.cn/answer-qzd/bge_rerank.git {rerank_path}')
+            os.system(f'cd {rerank_path} && git lfs pull')
             
-#             with open(rerank_model_path , 'rb') as f:
-#                 reranker_model = pickle.load(f)
-#                 logger.info('Rerank model loaded.')
-#                 return reranker_model
+            with open(rerank_model_path , 'rb') as f:
+                reranker_model = pickle.load(f)
+                logger.info('Rerank model loaded.')
+                return reranker_model
                 
-#         except Exception as e:
-#             logger.error(f'Failed to load rerank model: {e}')
+        except Exception as e:
+            logger.error(f'Failed to load rerank model: {e}')
 
-# def rerank(reranker, query, contexts, select_num):
-#         merge = [[query, context] for context in contexts]
-#         scores = reranker.compute_score(merge)
-#         sorted_indices = np.argsort(scores)[::-1]
+def rerank(reranker, query, contexts, select_num):
+        merge = [[query, context] for context in contexts]
+        scores = reranker.compute_score(merge)
+        sorted_indices = np.argsort(scores)[::-1]
 
-#         return [contexts[i] for i in sorted_indices[:select_num]]
+        return [contexts[i] for i in sorted_indices[:select_num]]
 
 def embedding_make(text_input, pdf_directory):
 
@@ -186,8 +192,7 @@ def embedding_make(text_input, pdf_directory):
         question=text_input
         
         retriever = BM25Retriever.from_documents(splits)
-        #retriever.k = 20
-        retriever.k = 10
+        retriever.k = 20
         bm25_result = retriever.invoke(question)
 
 
@@ -217,17 +222,17 @@ def embedding_make(text_input, pdf_directory):
             emb_list.append(all_page)
         print(len(emb_list))
 
-        #reranker_model = load_rerank_model()
+        reranker_model = load_rerank_model()
 
-        #documents = rerank(reranker_model, question, emb_list, 3)
-        #logger.info("After rerank...")
-        # reranked = []
-        # for doc in documents:
-        #     reranked.append(doc)
-        # print(len(reranked))
-        # reranked = ''.join(reranked)
+        documents = rerank(reranker_model, question, emb_list, 3)
+        logger.info("After rerank...")
+        reranked = []
+        for doc in documents:
+            reranked.append(doc)
+        print(len(reranked))
+        reranked = ''.join(reranked)
 
-        model_input = f'你是一个旅游攻略小助手，你的任务是，根据收集到的信息：\n{emb_list}.\n来精准回答用户所提出的问题：{question}。'
+        model_input = f'你是一个旅游攻略小助手，你的任务是，根据收集到的信息：\n{reranked}.\n来精准回答用户所提出的问题：{question}。'
         #print(reranked)
 
         model = ChatModel(config, stream=False)
@@ -304,13 +309,301 @@ def get_weather_forecast(location_id,api_key):
         # 如果请求不成功，打印错误信息  
         print(f"请求失败，状态码：{response.status_code}，错误信息：{response.text}")  
         return None  
+api_key = os.environ.get("api_key")
+from openai import OpenAI
+client = OpenAI(
+        api_key=api_key,
+        base_url="https://api.deepseek.com"
+)
+
+amap_key = os.environ.get("amap_key")
+
+def get_completion(messages, model="deepseek-chat"):
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=0,  # 模型输出的随机性，0 表示随机性最小
+        seed=1024,  # 随机种子保持不变，temperature 和 prompt 不变的情况下，输出就会不变
+        tool_choice="auto",  # 默认值，由系统自动决定，返回function call还是返回文字回复
+        tools=[{
+            "type": "function",
+            "function": {
+
+                "name": "get_location_coordinate",
+                "description": "根据POI名称，获得POI的经纬度坐标",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string",
+                            "description": "POI名称，必须是中文",
+                        },
+                        "city": {
+                            "type": "string",
+                            "description": "POI所在的城市名，必须是中文",
+                        }
+                    },
+                    "required": ["location", "city"],
+                }
+            }
+        },
+            {
+            "type": "function",
+            "function": {
+                "name": "search_nearby_pois",
+                "description": "搜索给定坐标附近的poi",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "longitude": {
+                            "type": "string",
+                            "description": "中心点的经度",
+                        },
+                        "latitude": {
+                            "type": "string",
+                            "description": "中心点的纬度",
+                        },
+                        "keyword": {
+                            "type": "string",
+                            "description": "目标poi的关键字",
+                        }
+                    },
+                    "required": ["longitude", "latitude", "keyword"],
+                }
+            }
+        }],
+    )
+    return response.choices[0].message
+
+
+
+
+def get_location_coordinate(location, city):
+    url = f"https://restapi.amap.com/v5/place/text?key={amap_key}&keywords={location}&region={city}"
+    print(url)
+    r = requests.get(url)
+    result = r.json()
+    if "pois" in result and result["pois"]:
+        return result["pois"][0]
+    return None
+
+
+def search_nearby_pois(longitude, latitude, keyword):
+    url = f"https://restapi.amap.com/v5/place/around?key={amap_key}&keywords={keyword}&location={longitude},{latitude}"
+    print(url)
+    r = requests.get(url)
+    result = r.json()
+    ans = ""
+    if "pois" in result and result["pois"]:
+        for i in range(min(3, len(result["pois"]))):
+            name = result["pois"][i]["name"]
+            address = result["pois"][i]["address"]
+            distance = result["pois"][i]["distance"]
+            ans += f"{name}\n{address}\n距离：{distance}米\n\n"
+    return ans
+    
+
+def process_request(prompt):
+    messages = [
+        {"role": "system", "content": "你是一个地图通，你可以找到任何地址。"},
+        {"role": "user", "content": prompt}
+    ]
+    response = get_completion(messages)
+    if (response.content is None):  # 解决 OpenAI 的一个 400 bug
+        response.content = ""
+    messages.append(response)  # 把大模型的回复加入到对话中
+    print("=====GPT回复=====")
+    print(response)
+    
+    # 如果返回的是函数调用结果，则打印出来
+    while (response.tool_calls is not None):
+        # 1106 版新模型支持一次返回多个函数调用请求
+        for tool_call in response.tool_calls:
+            args = json.loads(tool_call.function.arguments)
+            print(args)
+    
+            if (tool_call.function.name == "get_location_coordinate"):
+                print("Call: get_location_coordinate")
+                result = get_location_coordinate(**args)
+            elif (tool_call.function.name == "search_nearby_pois"):
+                print("Call: search_nearby_pois")
+                result = search_nearby_pois(**args)
+    
+            print("=====函数返回=====")
+            print(result)
+    
+            messages.append({
+                "tool_call_id": tool_call.id,  # 用于标识函数调用的 ID
+                "role": "tool",
+                "name": tool_call.function.name,
+                "content": str(result)  # 数值result 必须转成字符串
+            })
+    
+        response = get_completion(messages)
+        if (response.content is None):  # 解决 OpenAI 的一个 400 bug
+            response.content = ""
+        messages.append(response)  # 把大模型的回复加入到对话中
+    
+    print("=====最终回复=====")
+    print(response.content)
+    return response.content
+
+def llm(query, history=[], user_stop_words=[]):
+    try:
+        messages = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
+        for hist in history:
+            messages.append({'role': 'user', 'content': hist[0]})
+            messages.append({'role': 'assistant', 'content': hist[1]})
+        messages.append({'role': 'user', 'content': query})
+        responses = Generation.call(
+            model="qwen1.5-110b-chat",
+            messages=messages,
+            result_format='message',
+            stream=True,
+            incremental_output=True
+        )
+        content = ""
+        for response in responses:
+            if response.status_code == HTTPStatus.OK:
+                print(response)
+                content += response.output.choices[0].message.content
+            else:
+                print('Request id: %s, Status code: %s, error code: %s, error message: %s' % (
+                    response.request_id, response.status_code,
+                    response.code, response.message
+                ))
+        return content
+    except Exception as e:
+        return str(e)
+
+# Travily 搜索引擎
+os.environ['TAVILY_API_KEY'] = os.environ.get("TAVILY_API_KEY")
+tavily = TavilySearchResults(max_results=5)
+tavily.description = '这是一个类似谷歌和百度的搜索引擎，搜索知识、天气、股票、电影、小说、百科等都是支持的哦，如果你不确定就应该搜索一下，谢谢！'
+
+# 工具列表
+tools = [tavily]
+
+tool_names = 'or'.join([tool.name for tool in tools])
+tool_descs = []
+for t in tools:
+    args_desc = []
+    for name, info in t.args.items():
+        args_desc.append({'name': name, 'description': info['description'] if 'description' in info else '', 'type': info['type']})
+    args_desc = json.dumps(args_desc, ensure_ascii=False)
+    tool_descs.append('%s: %s,args: %s' % (t.name, t.description, args_desc))
+tool_descs = '\n'.join(tool_descs)
+
+prompt_tpl = '''Today is {today}. Please Answer the following questions as best you can. You have access to the following tools:
+
+{tool_descs}
+
+These are chat history before:
+{chat_history}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can be repeated zero or more times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {query}
+{agent_scratchpad}
+'''
+
+def agent_execute(query, chat_history=[]):
+    global tools, tool_names, tool_descs, prompt_tpl, llm, tokenizer
+    
+    agent_scratchpad = ''  # agent执行过程
+    while True:
+        history = '\n'.join(['Question:%s\nAnswer:%s' % (his[0], his[1]) for his in chat_history])
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        prompt = prompt_tpl.format(today=today, chat_history=history, tool_descs=tool_descs, tool_names=tool_names, query=query, agent_scratchpad=agent_scratchpad)
+        print('\033[32m---等待LLM返回... ...\n%s\n\033[0m' % prompt, flush=True)
+
+        response = llm(prompt, user_stop_words=['Observation:'])
+        print('\033[34m---LLM返回---\n%s\n---\033[34m' % response, flush=True)
+        
+        thought_i = response.rfind('Thought:')
+        final_answer_i = response.rfind('\nFinal Answer:')
+        action_i = response.rfind('\nAction:')
+        action_input_i = response.rfind('\nAction Input:')
+        observation_i = response.rfind('\nObservation:')
+        
+        if final_answer_i != -1 and thought_i < final_answer_i:
+            final_answer = response[final_answer_i + len('\nFinal Answer:'):].strip()
+            chat_history.append((query, final_answer))
+            return True, final_answer, chat_history
+        
+        if not (thought_i < action_i < action_input_i):
+            return False, 'LLM回复格式异常', chat_history
+        if observation_i == -1:
+            observation_i = len(response)
+            response = response + 'Observation: '
+        thought = response[thought_i + len('Thought:'):action_i].strip()
+        action = response[action_i + len('\nAction:'):action_input_i].strip()
+        action_input = response[action_input_i + len('\nAction Input:'):observation_i].strip()
+        
+        the_tool = None
+        for t in tools:
+            if t.name == action:
+                the_tool = t
+                break
+        if the_tool is None:
+            observation = 'the tool not exist'
+            agent_scratchpad = agent_scratchpad + response + observation + '\n'
+            continue 
+        
+        try:
+            action_input = json.loads(action_input)
+            tool_ret = the_tool.invoke(input=json.dumps(action_input))
+        except Exception as e:
+            observation = 'the tool has error:{}'.format(e)
+        else:
+            observation = str(tool_ret)
+        agent_scratchpad = agent_scratchpad + response + observation + '\n'
+
+def agent_execute_with_retry(query, chat_history=[], retry_times=10):
+    for i in range(retry_times):
+        success, result, chat_history = agent_execute(query, chat_history=chat_history)
+        if success:
+            return success, result, chat_history
+    return success, result, chat_history
+
+def process_network(query):
+    my_history = []
+    success, result, my_history = agent_execute_with_retry(query, chat_history=my_history)
+    return result
 
 # 旅行规划师功能
-prompt = '你现在是一位专业的旅行规划师，你的责任是根据旅行出发地，目的地、天数、行程风格（紧凑、适中、休闲），帮助我规划旅游行程并生成旅行计划表。请你以表格的方式呈现结果。 旅行计划表的表头请包含日期、地点、行程计划、交通方式、备注。所有表头都为必填项，请加深思考过程，严格遵守以下规则： 1. 日期请以DayN为格式如Day1。 2. 地点需要呈现当天所在城市，请根据日期、考虑地点的地理位置远近，严格且合理制定地点。 3. 行程计划需包含位置、时间、活动，其中位置需要根据地理位置的远近进行排序，位置的数量可以根据行程风格灵活调整，如休闲则位置数量较少、紧凑则位置数量较多，时间需要按照上午、中午、晚上制定并给出每一个位置所停留的时间如上午10点-中午12点，活动需要准确描述在位置发生的对应活动如参观xxx、游玩xxx、吃饭等，需根据位置停留时间合理安排活动类型。 4. 交通方式需根据地点、行程计划中的每个位置的地理距离合理选择步行、地铁、飞机等不同的交通方式。 5. 备注中需要包括对应行程计划需要考虑到的注意事项，保持多样性。 现在请你严格遵守以上规则，根据我的旅行目的地、天数、行程风格（紧凑、适中、休闲），再以表格的方式生成合理的旅行计划表，提供表格后请再询问我行程风格、偏好、特殊要求等，并根据此信息完善和优化旅行计划表再次提供，直到我满意。记住你要根据我提供的旅行目的地、天数等信息以表格形式生成旅行计划表，最终答案一定是表格形式。旅游出发地：{}，旅游目的地：{} ，天数：{} ，行程风格：{}'
 
-def chat(chat_destination, chat_history, chat_departure, chat_days, chat_style):
+prompt = """你现在是一位专业的旅行规划师，你的责任是根据旅行出发地、目的地、天数、行程风格（紧凑、适中、休闲）、预算、随行人数，帮助我规划旅游行程并生成详细的旅行计划表。请你以表格的方式呈现结果。旅行计划表的表头请包含日期、地点、行程计划、交通方式、餐饮安排、住宿安排、费用估算、备注。所有表头都为必填项，请加深思考过程，严格遵守以下规则：
+
+1. 日期请以DayN为格式如Day1，明确标识每天的行程。
+2. 地点需要呈现当天所在城市，请根据日期、考虑地点的地理位置远近，严格且合理制定地点，确保行程顺畅。
+3. 行程计划需包含位置、时间、活动，其中位置需要根据地理位置的远近进行排序。位置的数量可以根据行程风格灵活调整，如休闲则位置数量较少、紧凑则位置数量较多。时间需要按照上午、中午、晚上制定，并给出每一个位置所停留的时间（如上午10点-中午12点）。活动需要准确描述在位置发生的对应活动（如参观博物馆、游览公园、吃饭等），并需根据位置停留时间合理安排活动类型。
+4. 交通方式需根据地点、行程计划中的每个位置的地理距离合理选择，如步行、地铁、出租车、火车、飞机等不同的交通方式，并尽可能详细说明。
+5. 餐饮安排需包含每餐的推荐餐厅、类型（如本地特色、快餐等）、预算范围，就近选择。
+6. 住宿安排需包含每晚的推荐酒店或住宿类型（如酒店、民宿等）、地址、预估费用，就近选择。
+7. 费用估算需包含每天的预估总费用，并注明各项费用的细分（如交通费、餐饮费、门票费等）。
+8. 备注中需要包括对应行程计划需要考虑到的注意事项，保持多样性，涉及饮食、文化、天气、语言等方面的提醒。
+9. 请特别考虑随行人数的信息，确保行程和住宿安排能满足所有随行人员的需求。
+10.旅游总体费用不能超过预算。
+
+现在请你严格遵守以上规则，根据我的旅行出发地、目的地、天数、行程风格（紧凑、适中、休闲）、预算、随行人数，生成合理且详细的旅行计划表。记住你要根据我提供的旅行目的地、天数等信息以表格形式生成旅行计划表，最终答案一定是表格形式。以下是旅行的基本信息：
+旅游出发地：{}，旅游目的地：{} ，天数：{}天 ，行程风格：{} ，预算：{}，随行人数：{}, 特殊偏好、要求：{}
+
+"""
+def chat(chat_destination, chat_history, chat_departure, chat_days, chat_style, chat_budget, chat_people, chat_other):
     stream_model = ChatModel(config, stream=True)
-    final_query = prompt.format(chat_departure, chat_destination, chat_days, chat_style)
+    final_query = prompt.format(chat_departure, chat_destination, chat_days, chat_style, chat_budget,  chat_people, chat_other)
     prompts = [ChatMessage(role='user', content=final_query)]
     # 将问题设为历史对话
     chat_history.append((chat_destination, ''))
@@ -319,54 +612,95 @@ def chat(chat_destination, chat_history, chat_departure, chat_days, chat_style):
         # 总结答案
         answer = chat_history[-1][1] + chunk_text
         # 替换最新的对话内容
-        chat_history[-1] = (chat_destination, answer)
+        information = '旅游出发地：{}，旅游目的地：{} ，天数：{} ，行程风格：{} ，预算：{}，随行人数：{}'.format(chat_departure, chat_destination, chat_days, chat_style, chat_budget,  chat_people)
+        chat_history[-1] = (information, answer)
         # 返回
         yield '', chat_history
 
 # Gradio接口定义
 with gr.Blocks() as demo:
-    html_code = f"""
-            <p align="center">
-               <img src="./logo.png" alt="Logo" width="20%" style="border-radius: 5px;">
-            </p>
-            <h1 style="text-align: center;">😀 嘿，旅游爱好者们！ 快来认识你的全新旅行伙伴——“LvBan恣行”旅游助手！</h1>
-            <h2 style="text-align: center;">它基于星火大模型中的文生文,图生文以及文生语音技术，旨在为##希望体验旅行乐趣并规划个性化和难忘旅程的个人提供创新解决方案##。首先，只需提供您的旅行出发地、目的地、天数以及您偏好的行程风格（如紧凑、适中或休闲），我们的助手就能为您精心规划行程，并生成详尽的旅行计划表（e.g: 每天的行程计划，交通方式，需要注意的点）。同时，我们使用星火的向量模型，使用RAG技术，从数据库中检索出与用户询问相关的内容，让模型生成更加可靠，准确。此外，您还可以随手拍摄旅途中的照片，并通过我们的应用上传。应用将自动为您生成适合不同社交媒体平台（如朋友圈、小红书、抖音、微博）的文案风格，让您能够轻松分享旅途中的点滴，与朋友们一起享受旅游的乐趣。</h2>
-            """
-    gr.Markdown(html_code)
-    with gr.Tab("旅行规划师"):
-        warning_html_code = """
-                <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
-                    <p>🐱 欢迎来到LvBan旅游助手，根据您提供的旅行出发地，目的地、天数、行程风格（紧凑、适中、休闲），帮助您规划旅游行程并生成旅行计划表</p>
-                    <p>相关地址: <a href="https://challenge.xfyun.cn/h5/xinghuo?ch=dwm618">比赛地址</a>、<a href="https://github.com/yaosenJ/LvBanGPT">项目地址</a></p>
+    html_code = """
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 10px;
+                }
+                .container {
+                    max-width: 1500px;
+                    margin: auto;
+                    background-color: #ffffff;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    padding: 10px;
+                }
+                .logo img {
+                    display: block;
+                    margin: 0 auto;
+                    border-radius: 7px;
+                }
+                .content h2 {
+                    text-align: center;
+                    color: #999999;
+                    font-size: 24px;
+                    margin-top: 20px;
+                }
+                .content p {
+                    text-align: center;
+                    color: #cccccc;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    margin-top: 30px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="logo">
+                    <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/logo.png?raw=true" alt="Logo" width="30%">
                 </div>
-                """
-        gr.HTML(warning_html_code)
-        # 输入框
+                <div class="content">
+                    <h2>😀 亲爱的旅游爱好者们，欢迎来到“LvBan恣行”，您的专属旅行伙伴！我们致力于为您提供个性化的旅行规划、陪伴和分享服务，让您的旅程充满乐趣并留下难忘回忆。</h2>
+                <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
+                    <p>“LvBan恣行”基于星火大模型的文生文、图生文以及文生语音等技术，旨在为您量身定制一份满意的旅行计划。无论您期望体验何种旅行目的地、天数、行程风格（如紧凑、适中或休闲）、预算以及随行人数，我们的助手都能为您精心规划行程并生成详尽的旅行计划表，包括每天的行程安排、交通方式以及需要注意的事项。</p>
+                    <p>此外，我们还采用RAG技术，专为提供实用全方位信息而设计，包括景点推荐、活动安排、餐饮、住宿、购物、行程推荐以及实用小贴士等。目前，我们的知识库已涵盖全国各地区、城市的旅游攻略信息，为您提供丰富多样的旅行建议。</p>
+                    <p>您还可以随时拍摄旅途中的照片，并通过我们的应用上传。应用将自动为您生成适应不同社交媒体平台（如朋友圈、小红书、抖音、微博）的文案风格，让您轻松分享旅途中的点滴，与朋友们共同感受旅游的乐趣。</p>
+                    <p>立即加入“LvBan恣行”，让我们为您的旅行保驾护航，共同打造一段难忘的旅程！</p>
+                </div>
+                </div>
+            </div>
+        </body>
+        </html>
+"""
+    gr.HTML(html_code)
+    with gr.Tab("旅行规划助手"):
+         # 输入框
         chat_departure = gr.Textbox(label="输入旅游出发地", placeholder="请你输入出发地")
         chat_destination = gr.Textbox(label="输入旅游目的地", placeholder="请你输入想去的地方")
         
-        chat_days = gr.Radio(choices=['1天', '2天', '3天', '4天', '5天', '6天', '7天', '8天', '9天', '10天'], value='3天', label='旅游天数')
-        chat_style = gr.Radio(choices=['紧凑', '适中', '休闲'], value='适中', label='行程风格')
-        
+        with gr.Accordion("个性化选择（天数，行程风格，预算，随行人数）", open=False):
+            chat_days = gr.Slider(minimum=1, maximum=10, step=1, value=3, label='旅游天数')
+            chat_style = gr.Radio(choices=['紧凑', '适中', '休闲'], value='适中', label='行程风格')
+            chat_budget = gr.Textbox(label="输入预算(带上单位)", placeholder="请你输入预算")
+            chat_people = gr.Textbox(label="输入随行人数", placeholder="请你输入随行人数")
+            chat_other = gr.Textbox(label="特殊偏好、要求(可写无)", placeholder="请你特殊偏好、要求")
         # 聊天对话框
-        chatbot = gr.Chatbot([], elem_id="chat-box", label="聊天历史")
+        chatbot = gr.Chatbot([], elem_id="chat-box", label="聊天窗口", height=1000)
         # 按钮
         llm_submit_tab = gr.Button("发送", visible=True)
         # 问题样例
         gr.Examples(["合肥", "郑州", "西安", "北京", "广州", "大连"], chat_departure)
         gr.Examples(["北京", "南京", "大理", "上海", "东京", "巴黎"], chat_destination)
         # 按钮出发逻辑
-        llm_submit_tab.click(fn=chat, inputs=[chat_destination, chatbot, chat_departure, chat_days, chat_style], outputs=[chat_destination, chatbot])
+        llm_submit_tab.click(fn=chat, inputs=[chat_destination, chatbot, chat_departure, chat_days, chat_style, chat_budget, chat_people, chat_other], outputs=[ chat_destination,chatbot])
         
-    with gr.Tab("旅行攻略小卫士"):
-        warning_html_code = """
-            <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
-                <p>🐱 欢迎来到LvBan旅游助手，我可以提供景点推荐、活动安排、餐饮、住宿、购物、行程推荐、实用小贴士等实用全方位信息</p>
-                <p>目前知识库包含全国各地区、城市旅游攻略信息。如：重庆、香港、北京、黄山、新疆、厦门、大理等几百个景点</p>
-                <p>相关地址: <a href="https://challenge.xfyun.cn/h5/xinghuo?ch=dwm618">比赛地址</a>、<a href="https://github.com/yaosenJ/LvBanGPT">项目地址</a></p>
-            </div>
-            """
-        gr.HTML(warning_html_code)
+    with gr.Tab("旅游问答助手"):
         chatbot = gr.Chatbot(label="聊天记录")
         msg = gr.Textbox(lines=2,placeholder="请输入您的问题（旅游景点、活动、餐饮、住宿、购物、推荐行程、小贴士等实用信息）",label="提供景点推荐、活动安排、餐饮、住宿、购物、行程推荐、实用小贴士等实用信息")
         whether_rag = gr.Radio(choices=['是','否'], value='否', label='是否启用RAG')
@@ -385,6 +719,18 @@ with gr.Blocks() as demo:
         weather_input = gr.Textbox(label="请输入城市名查询天气", placeholder="例如：北京")
         weather_output = gr.HTML(value="", label="天气查询结果")
         query_button = gr.Button("查询天气")
+        query_near = gr.Textbox(label="搜索附近的餐饮、酒店等", placeholder="例如：合肥市高新区中国声谷产业园附近的美食")
+        result = gr.Textbox(label="查询结果", lines=10)
+        submit_btn = gr.Button("查询附近的餐饮、酒店等")
+        gr.Examples(["合肥市高新区中国声谷产业园附近的美食", "北京三里屯附近的咖啡", "南京市玄武区新街口附近的甜品店", "上海浦东新区陆家嘴附近的热门餐厅", "武汉市光谷步行街附近的火锅店", "广州市天河区珠江新城附近的酒店"], query_near)
+        submit_btn.click(process_request, inputs=[query_near], outputs=[result])
+        
+        query_network = gr.Textbox(label="联网搜索问题", placeholder="例如：秦始皇兵马俑开放时间")
+        result_network = gr.Textbox(label="搜索结果", lines=10)
+        submit_btn_network = gr.Button("联网搜索")
+        gr.Examples(["秦始皇兵马俑开放时间", "合肥有哪些美食", "北京故宫开放时间", "黄山景点介绍", "上海迪士尼门票需要多少钱"], query_network)
+        submit_btn_network.click(process_network, inputs=[query_network], outputs=[result_network])
+        
         Weather_APP_KEY = os.environ.get("Weather_APP_KEY")
         def weather_process(location):
                 api_key = Weather_APP_KEY  # 替换成你的API密钥  
@@ -441,14 +787,7 @@ with gr.Blocks() as demo:
         query_button.click(weather_process, [weather_input], [weather_output])
     
 
-    with gr.Tab("旅行智能文案生成"):
-        warning_html_code = """
-                <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
-                    <p>🐱 欢迎来到LvBan旅游助手，根据你随手拍的照片，上传到该应用，自动生成你想要的文案风格模式（朋友圈、小红书、抖音、微博），然后分享给大家，一起享受旅游愉快。</p>
-                    <p>相关地址: <a href="https://challenge.xfyun.cn/h5/xinghuo?ch=dwm618">比赛地址</a>、<a href="https://github.com/yaosenJ/LvBanGPT">项目地址</a></p>
-                </div>
-                """
-        gr.HTML(warning_html_code)
+    with gr.Tab("旅行文案助手"):
         with gr.Row():
             image_input = gr.Image(type="pil", label="上传图像")
             style_dropdown = gr.Dropdown(choices=style_options, label="选择风格模式", value="朋友圈")
