@@ -85,7 +85,8 @@
 <h2 id="1"> 快速使用 </h2>
 
 <h3 id="1-1">在线体验 </h3>
-目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址 ：[https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
+
+目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
 
 <h3 id="1-2">本地部署 </h3>
 
@@ -118,7 +119,7 @@ gradio app.py
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/RAG.png" alt="Demo" width="45%">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%A9%E6%B0%94%E6%9F%A5%E8%AF%A2.png" alt="Demo" width="45%">
-  <img src="" alt="Demo" width="45%">
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E9%99%84%E8%BF%91%E6%90%9C%E7%B4%A2.png" alt="Demo" width="45%">
   <img src="" alt="Demo" width="45%">
 </p>
 
@@ -151,7 +152,7 @@ gradio app.py
 
 感谢上海人工智能实验室，书生浦语大模型实战营的算力和计算平台支持！
 
-##参考资料
+## 参考资料
 
 [星火大模型 python sdk库全面使用说明](https://github.com/iflytek/spark-ai-python)  
 
