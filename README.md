@@ -127,7 +127,7 @@ gradio app.py
 
 [yaosenJ](https://github.com/yaosenJ): 项目发起人，负责前后端开发
 
-[shiqiyio](https://github.com/kaiwang0112006): 数字人、演示录制视频
+[shiqiyio](https://github.com/shiqiyio): 数字人、演示录制视频
 
 [XiaoyangBi](https://github.com/XiaoyangBi): 产品功能规划，计划书撰写 
 
