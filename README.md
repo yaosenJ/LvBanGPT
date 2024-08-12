@@ -67,6 +67,89 @@
 - [2024.07.11] 发布**旅游规划师**应用，根据旅游出发地、目的地、旅游天数以及旅游风格，形成旅行计划表，包括每天的行程安排、交通方式以及需要注意的事项 
 - [2024.07.01] 借助星火大模型，开发简单**旅游问答**DEMO应用
 
+## 🗂️ 目录
+
+- [🚴 快速开始](#1-快速使用)
+  - [在线体验](#11-在线体验)
+  - [本地部署](#12-本地部署)
+  - [PAI-DSW部署](#12-PAI-DSW部署)
+- [详细指南](#2-详细指南)
+  - [数据、模型及工具选型](#21-数据、模型及工具选型)
+  - [基于本地旅游攻略pdf文本文件的RAG系统](#22-基于本地旅游攻略pdf文本文件的RAG系统)
+  - [多模态生成：图生文，TTS和数字人视频合成](#23-多模态生成：图生文，TTS和数字人视频合成)
+  - [旅游问答智能体(Agent)实现](#24-旅游问答智能体(Agent)实现)
+- [案例展示](#3-案例展示)
+- [人员贡献](#4-人员贡献)
+- [💡 致谢](#5-致谢)
+
+<h2 id="1">🚴 快速使用 </h2>
+
+<h3 id="1-1">在线体验 </h3>
+目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址 ：[https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
+
+<h3 id="1-2">本地部署 </h3>
+
+```shell
+
+conda create -n LvBanGPT python=3.10.0 -y
+conda activate  LvBanGPT
+conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=12.1 -c pytorch -c nvidia
+pip install -r requirements.txt
+gradio app.py
+```
+<h3 id="1-3">PAI-DSW部署</h3>
+
+
+
+<h2 id="2"> 详细指南 </h2>
+
+<h3 id="2-1"> 数据、模型及工具选型 </h3>
+
+
+<h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
+
+
+<h3 id="2-3"> 多模态生成：图生文，TTS和数字人视频合成 </h3>
+
+- 详细查看模型微调，请查阅[模型微调指南](https://github.com/yaosenJ/CoalQA/blob/main/finetune/README.md)
+
+<h3 id="2-4"> 旅游问答智能体(Agent)实现</h3>
+
+<h2 id="3"> 案例展示 </h2>
+<p align="center">
+  <img src="" alt="Demo" width="45%">
+  <img src="" alt="Demo" width="45%">
+  <img src="" alt="Demo" width="45%">
+  <img src="" alt="Demo" width="45%">
+</p>
+
+<h2 id="4"> 人员贡献 </h2>
+
+[yaosenJ](https://github.com/yaosenJ): 项目发起人，负责前后端开发
+
+[kaiwang0112006](https://github.com/kaiwang0112006): 数字人、演示录制视频
+
+[Hao813](https://github.com/Hao813): 产品功能规划，计划书撰写 
+
+[Volta-lemon](https://github.com/Volta-lemon): 负责模型微调、测试
+
+[qzd-1](https://github.com/qzd-1): 负责RAG模块
+
+[Hao813](https://github.com/Hao813): 负责代码编写（天气查询功能），产品规划
+
+[Volta-lemon](https://github.com/Volta-lemon): 数据库数据查找，运行效果图，测试
+
+
+
+
+<h2 id="5">💡 致谢</h2>
+
+
+我们非常感谢以下这些开源项目给予我们的帮助：
+
+  
+最后感谢上海人工智能实验室推出的书生·浦语大模型实战营，为我们的项目提供宝贵的技术指导和强大的算力支持！
+
 **参考资料**
 
 -[星火大模型 python sdk库全面使用说明](https://github.com/iflytek/spark-ai-python)  
