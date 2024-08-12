@@ -145,8 +145,7 @@ gradio app.py
 
 <h3 id="2-3"> 多模态生成：图生文，TTS和数字人视频合成 </h3>
 
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90.gif
-" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90.gif" style="zoom:40%;" />
   
 通过将文本数据处理成音频数据后同视频一起输入，先使用脚本处理视频，该脚本首先会预先进行必要的预处理，例如人脸检测、人脸解析和 VAE 编码等。对音频和图片通过唇同步模型处理，生成对应唇形的照片，匹配所有的音频，最终将音频与生成的图片合成为视频输出。
 
@@ -155,6 +154,9 @@ gradio app.py
 - 查询天气Agent: 利用星火大模型（Spark3.5 Max）和 和风天气API实现联网搜索Agent。
 - 附近搜索Agent: 利用星火大模型（Spark3.5 Max）和高德地图API实现附近搜索Agent。该Agent系统可以根据用户输入的文本请求，星火大模型自动判断是否需要调用高德地图API。若提问关于附近地址查询问题，则调用地图服务来获取地点信息和附近POI，目的帮助用户查询特定地点的周边设施、提供地址信息等，反之，其他问题，不调用高德地图API。
 - 联网搜索Agent：利用星火大模型（Spark3.5 Max）和 Travily 搜索引擎API实现联网搜索Agent。
+
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/Agent.png" style="zoom:40%;" />
+  
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/RAG.png" alt="Demo" >
