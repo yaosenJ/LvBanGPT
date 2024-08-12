@@ -28,12 +28,14 @@ import datetime
 from http import HTTPStatus
 from dashscope import Generation
 import dashscope
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv())
 # 加载讯飞的api配置
-SPARKAI_APP_ID = os.environ.get("SPARKAI_APP_ID")
-SPARKAI_API_SECRET = os.environ.get("SPARKAI_API_SECRET")
-SPARKAI_API_KEY = os.environ.get("SPARKAI_API_KEY")
+SPARKAI_APP_ID = os.getenv("SPARKAI_APP_ID")
+SPARKAI_API_SECRET = os.getenv("SPARKAI_API_SECRET")
+SPARKAI_API_KEY = os.getenv("SPARKAI_API_KEY")
 config = Config(SPARKAI_APP_ID, SPARKAI_API_KEY, SPARKAI_API_SECRET)
-dashscope.api_key = os.environ.get("dashscope_api_key")
+dashscope.api_key = os.getenv("dashscope_api_key")
 # 初始化模型
 iu = ImageUnderstanding(config)
 t2a = Text2Audio(config)
@@ -309,14 +311,14 @@ def get_weather_forecast(location_id,api_key):
         # 如果请求不成功，打印错误信息  
         print(f"请求失败，状态码：{response.status_code}，错误信息：{response.text}")  
         return None  
-api_key = os.environ.get("api_key")
+api_key = os.getenv("api_key")
 from openai import OpenAI
 client = OpenAI(
         api_key=api_key,
         base_url="https://api.deepseek.com"
 )
 
-amap_key = os.environ.get("amap_key")
+amap_key = os.getenv("amap_key")
 
 def get_completion(messages, model="deepseek-chat"):
     response = client.chat.completions.create(
@@ -477,7 +479,7 @@ def llm(query, history=[], user_stop_words=[]):
         return str(e)
 
 # Travily 搜索引擎
-os.environ['TAVILY_API_KEY'] = os.environ.get("TAVILY_API_KEY")
+os.environ['TAVILY_API_KEY'] = os.getenv("TAVILY_API_KEY")
 tavily = TavilySearchResults(max_results=5)
 tavily.description = '这是一个类似谷歌和百度的搜索引擎，搜索知识、天气、股票、电影、小说、百科等都是支持的哦，如果你不确定就应该搜索一下，谢谢！'
 
@@ -731,7 +733,7 @@ with gr.Blocks() as demo:
         gr.Examples(["秦始皇兵马俑开放时间", "合肥有哪些美食", "北京故宫开放时间", "黄山景点介绍", "上海迪士尼门票需要多少钱"], query_network)
         submit_btn_network.click(process_network, inputs=[query_network], outputs=[result_network])
         
-        Weather_APP_KEY = os.environ.get("Weather_APP_KEY")
+        Weather_APP_KEY = os.getenv("Weather_APP_KEY")
         def weather_process(location):
                 api_key = Weather_APP_KEY  # 替换成你的API密钥  
                 location_data = get_location_data(location, api_key)
@@ -803,6 +805,11 @@ with gr.Blocks() as demo:
         convert_button1.click(on_convert_click, inputs=[generated_text], outputs=[audio_output])
         convert_button2 = gr.Button("将文案转为视频(请耐心等待)", visible=True)
         convert_button2.click(on_lip_click, inputs=[generated_text],outputs=[video_output])
+
+# if __name__ == "__main__":
+#     print("启动 Gradio 界面...")
+#     demo.queue()  # 启用队列处理请求
+#     demo.launch(root_path='/dsw-619620/proxy/7860/')
 
 if __name__ == "__main__":
     demo.queue().launch(share=True)
