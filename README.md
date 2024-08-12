@@ -153,13 +153,13 @@ gradio app.py
 
 **参考资料**
 
--[星火大模型 python sdk库全面使用说明](https://github.com/iflytek/spark-ai-python)  
+[星火大模型 python sdk库全面使用说明](https://github.com/iflytek/spark-ai-python)  
 
--[星火大模型 python sdk库简易使用说明](https://pypi.org/project/dwspark/2024.0.2/)
+[星火大模型 python sdk库简易使用说明](https://pypi.org/project/dwspark/2024.0.2/)
 
--[gradio前端展示案例](https://modelscope.cn/studios/Datawhale/datawhale_spark_2024)
+[gradio前端展示案例](https://modelscope.cn/studios/Datawhale/datawhale_spark_2024)
 
--[基于Assistant API的旅游助手的demo](https://help.aliyun.com/zh/model-studio/user-guide/assistant-api-based-travel-assistant?spm=a2c4g.11186623.0.0.1565c560IOXHpC)
+[基于Assistant API的旅游助手的demo](https://help.aliyun.com/zh/model-studio/user-guide/assistant-api-based-travel-assistant?spm=a2c4g.11186623.0.0.1565c560IOXHpC)
 
 
 
