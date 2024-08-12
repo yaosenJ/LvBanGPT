@@ -133,7 +133,7 @@ gradio app.py
 
 [qzd-1](https://github.com/qzd-1): 负责RAG模块
 
-[Wwh-SoEximious](https://github.com/Hao813): 负责代码编写（天气查询功能），产品规划
+[Wwh-SoEximious](https://github.com/Wwh-SoEximious): 负责代码编写（天气查询功能），产品规划
 
 [Dovislu](https://github.com/Dovislu): 数据收集处理，测试
 
