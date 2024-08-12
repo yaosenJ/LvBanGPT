@@ -69,7 +69,7 @@
 
 ## 🗂️ 目录
 
-- [🚴 快速开始](#1-快速使用)
+- [ 快速开始](#1-快速使用)
   - [在线体验](#11-在线体验)
   - [本地部署](#12-本地部署)
   - [PAI-DSW部署](#12-PAI-DSW部署)
@@ -80,9 +80,9 @@
   - [旅游问答智能体(Agent)实现](#24-旅游问答智能体(Agent)实现)
 - [案例展示](#3-案例展示)
 - [人员贡献](#4-人员贡献)
-- [💡 致谢](#5-致谢)
+- [ 致谢](#5-致谢)
 
-<h2 id="1">🚴 快速使用 </h2>
+<h2 id="1"> 快速使用 </h2>
 
 <h3 id="1-1">在线体验 </h3>
 目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址 ：[https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
@@ -126,23 +126,18 @@ gradio app.py
 
 [yaosenJ](https://github.com/yaosenJ): 项目发起人，负责前后端开发
 
-[kaiwang0112006](https://github.com/kaiwang0112006): 数字人、演示录制视频
+[shiqiyio](https://github.com/kaiwang0112006): 数字人、演示录制视频
 
-[Hao813](https://github.com/Hao813): 产品功能规划，计划书撰写 
-
-[Volta-lemon](https://github.com/Volta-lemon): 负责模型微调、测试
+[XiaoyangBi](https://github.com/Hao813): 产品功能规划，计划书撰写 
 
 [qzd-1](https://github.com/qzd-1): 负责RAG模块
 
-[Hao813](https://github.com/Hao813): 负责代码编写（天气查询功能），产品规划
+[Wwh-SoEximious](https://github.com/Hao813): 负责代码编写（天气查询功能），产品规划
 
-[Volta-lemon](https://github.com/Volta-lemon): 数据库数据查找，运行效果图，测试
-
-
+[Dovislu](https://github.com/Volta-lemon): 数据收集处理，测试
 
 
-<h2 id="5">💡 致谢</h2>
-
+<h2 id="5"> 致谢</h2>
 
 我们非常感谢以下这些开源项目给予我们的帮助：
 
