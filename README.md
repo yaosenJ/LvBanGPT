@@ -111,7 +111,6 @@ gradio app.py
 
 <h3 id="2-3"> 多模态生成：图生文，TTS和数字人视频合成 </h3>
 
-- 详细查看模型微调，请查阅[模型微调指南](https://github.com/yaosenJ/CoalQA/blob/main/finetune/README.md)
 
 <h3 id="2-4"> 旅游问答智能体(Agent)实现</h3>
 
