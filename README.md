@@ -129,7 +129,7 @@ gradio app.py
 
 [shiqiyio](https://github.com/kaiwang0112006): 数字人、演示录制视频
 
-[XiaoyangBi](https://github.com/Hao813): 产品功能规划，计划书撰写 
+[XiaoyangBi](https://github.com/XiaoyangBi): 产品功能规划，计划书撰写 
 
 [qzd-1](https://github.com/qzd-1): 负责RAG模块
 
