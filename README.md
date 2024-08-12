@@ -104,8 +104,15 @@ gradio app.py
 <h2 id="2"> 详细指南 </h2>
 
 <h3 id="2-1"> 数据、模型及工具选型 </h3>
-数据集：全国各地区及景点旅游攻略pdf文本文件
+
+- 数据集：全国各地区及景点旅游攻略pdf文本文件
+  
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%95%B0%E6%8D%AE.png" alt="image-20240131182121394" style="zoom:40%;" />
+  
+- 大语言模型：星火大模型(Spark3.5 Max)
+- 图片理解模型：星火图片理解模型
+- 语音合成模型：星火语音合成模型
+- 向量模型：星火文本向量模型
 <h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
 
 
