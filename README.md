@@ -135,7 +135,7 @@ gradio app.py
 
 [Wwh-SoEximious](https://github.com/Hao813): 负责代码编写（天气查询功能），产品规划
 
-[Dovislu](https://github.com/Volta-lemon): 数据收集处理，测试
+[Dovislu](https://github.com/Dovislu): 数据收集处理，测试
 
 
 <h2 id="5"> 致谢</h2>
