@@ -116,7 +116,7 @@ gradio app.py
 
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
-  <img src="" alt="Demo" width="45%">
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/RAG.png" alt="Demo" width="45%">
   <img src="" alt="Demo" width="45%">
   <img src="" alt="Demo" width="45%">
   <img src="" alt="Demo" width="45%">
