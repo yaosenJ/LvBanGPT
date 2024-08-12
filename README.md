@@ -117,10 +117,10 @@ gradio app.py
 
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
-  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/RAG.png" alt="Demo" width="45%">
-  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%A9%E6%B0%94%E6%9F%A5%E8%AF%A2.png" alt="Demo" width="45%">
-  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E9%99%84%E8%BF%91%E6%90%9C%E7%B4%A2.png" alt="Demo" width="45%">
-  <img src="" alt="Demo" width="45%">
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/RAG.png" alt="Demo" >
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%A9%E6%B0%94%E6%9F%A5%E8%AF%A2.png" alt="Demo" >
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E9%99%84%E8%BF%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%81%94%E7%BD%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
 </p>
 
 <h2 id="4"> 人员贡献 </h2>
