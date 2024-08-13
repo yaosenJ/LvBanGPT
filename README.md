@@ -50,6 +50,7 @@
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
+- [2024.08.13] 项目介绍视频发布：[B站](https://www.bilibili.com/video/BV1pxYye6ECE)
 - [2024.08.10] 完成PAI-DSW部署演示，以及操作文档撰写
 - [2024.08.10] **发布LvBan v1.5**[modelscope](https://www.modelscope.cn/studios/NumberJys/LvBan)
 - [2024.08.03] 进一步在旅行规划助手增加用户偏好设置（预算，随行人数）、特殊要求，帮助游客：**餐饮安排**、**住宿安排**、**费用估算**等
