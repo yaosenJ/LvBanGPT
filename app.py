@@ -236,7 +236,7 @@ def embedding_make(text_input, pdf_directory):
         reranked = ''.join(reranked)
 
         model_input = f'你是一个旅游攻略小助手，你的任务是，根据收集到的信息：\n{reranked}.\n来精准回答用户所提出的问题：{question}。'
-        #print(reranked)
+        print(reranked)
 
         model = ChatModel(config, stream=False)
         output = model.generate([ChatMessage(role="user", content=model_input)])
