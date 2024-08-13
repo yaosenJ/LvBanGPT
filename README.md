@@ -99,6 +99,7 @@ pip install -r requirements.txt
 gradio app.py
 ```
 <h3 id="1-3">PAI-DSW部署</h3>
+#### 1. 登录ModelScope社区，选择`ubuntu22.04-cuda12.1.0-py310-torch2.1.2-tf2.14.0-1.14.0`镜像，启动魔搭GPU环境。地址: https://www.modelscope.cn/my/mynotebook/preset
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW_GPU.png"  style="zoom:40%;" />
 
 <h2 id="2"> 详细指南 </h2>
