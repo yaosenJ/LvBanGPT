@@ -99,7 +99,7 @@ pip install -r requirements.txt
 gradio app.py
 ```
 <h3 id="1-3">PAI-DSW部署</h3>
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW.png"  style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW_GPU.png"  style="zoom:40%;" />
 
 <h2 id="2"> 详细指南 </h2>
 
