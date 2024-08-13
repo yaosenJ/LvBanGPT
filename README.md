@@ -90,8 +90,7 @@
 
 <h3 id="1-2">本地部署 </h3>
 
-```shell
-
+```bash
 conda create -n LvBanGPT python=3.10.0 -y
 conda activate  LvBanGPT
 conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=12.1 -c pytorch -c nvidia
@@ -103,7 +102,16 @@ gradio app.py
 #### 1. 登录ModelScope社区，选择`ubuntu22.04-cuda12.1.0-py310-torch2.1.2-tf2.14.0-1.14.0`魔搭GPU镜像，启动环境。地址: https://www.modelscope.cn/my/mynotebook/preset
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/PAI_DSW_GPU.png"  style="zoom:40%;" />
   
-#### 2.
+#### 2.克隆本项目仓库，环境依赖包安装
+
+```bash
+git clone https://github.com/yaosenJ/LvBanGPT.git
+cd LvBanGPT
+pip install -r requirements.txt
+```
+#### 3.下载重排模型
+打开
+
 <h2 id="2"> 详细指南 </h2>
 
 <h3 id="2-1"> 数据、模型及工具选型 </h3>
