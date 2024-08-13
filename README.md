@@ -109,6 +109,8 @@ git clone https://github.com/yaosenJ/LvBanGPT.git
 cd LvBanGPT
 pip install -r requirements.txt
 ```
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E7%8E%AF%E5%A2%83%E5%8C%85%E4%B8%8B%E8%BD%BD.png"  style="zoom:40%;" />
+
 #### 3.下载重排模型
 打开
 
