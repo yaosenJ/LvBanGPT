@@ -125,15 +125,15 @@ pip install -r requirements.txt
 
 vim .env 
 ```bash
-SPARKAI_APP_ID=36f6a1f2
-SPARKAI_API_SECRET=N2IzZDk0NjYzZDRjNmY3ZGUxY2U4MDA4
-SPARKAI_API_KEY=a9b7b68d8bc752e79c4e5dfa7e802a9c
-x_api_key=c71505b1-9d4a-469a-b8d4-39c6db1a97c3
-Weather_APP_KEY=417618eacc504fa4b729c18f4e8393cf
-amap_key=189a456127c050ee919cc22cff560412
-api_key=sk-75ec0872c7294913b61e799f40697508
-dashscope_api_key=sk-064b2c7a65b9478aab4d263c7bf7bdb9
-TAVILY_API_KEY=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
+SPARKAI_APP_ID=36f6
+SPARKAI_API_SECRET=N2IzZDk0NjYzZDRjNmY3ZGUx
+SPARKAI_API_KEY=a9b7b68d8bc752e79c4
+x_api_key=c71505b1-9d4a-469a-b8d4-3
+Weather_APP_KEY=417618eacc504fa4b7
+amap_key=189a456127c050ee
+api_key=sk-75ec0872c729491
+dashscope_api_key=sk-064b2c7a65b
+TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 ```
 #### 6.运行app.py,即python3 app.py,成功界面如下即可
 
