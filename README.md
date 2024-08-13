@@ -50,7 +50,7 @@
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
-
+- [2024.08.10] 完成PAI-DSW部署演示，以及操作文档撰写
 - [2024.08.10] **发布LvBan v1.5**[modelscope](https://www.modelscope.cn/studios/NumberJys/LvBan)
 - [2024.08.03] 进一步在旅行规划助手增加用户偏好设置（预算，随行人数）、特殊要求，帮助游客：**餐饮安排**、**住宿安排**、**费用估算**等
 - [2024.07.31] 项目三个模块名称，分别改为**旅游规划助手**、**旅游问答助手**、**旅游文案助手**
@@ -135,6 +135,7 @@ TAVILY_API_KEY=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
 ```
 #### 6.运行app.py,即python3 app.py,成功界面如下即可
 
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%88%90%E5%8A%9F%E9%A1%B5%E9%9D%A2.png"  style="zoom:40%;" />
 
 <h2 id="2"> 详细指南 </h2>
 
