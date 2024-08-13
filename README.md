@@ -91,6 +91,8 @@
 <h3 id="1-2">本地部署 </h3>
 
 ```bash
+git clone https://github.com/yaosenJ/LvBanGPT.git
+cd LvBanGPT
 conda create -n LvBanGPT python=3.10.0 -y
 conda activate  LvBanGPT
 conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=12.1 -c pytorch -c nvidia
