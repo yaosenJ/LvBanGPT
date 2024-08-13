@@ -115,7 +115,7 @@ pip install -r requirements.txt
 
 #### 3.打开`down_rerank_model.ipynb`，下载重排模型
 
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E7%8E%AF%E5%A2%83%E5%8C%85%E4%B8%8B%E8%BD%BD.png"  style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E9%87%8D%E6%8E%92%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD.png"  style="zoom:40%;" />
   
 #### 4.`app.py`代码修改
 
