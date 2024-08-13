@@ -16,6 +16,7 @@ from langchain.document_loaders.pdf import PyMuPDFLoader
 from langchain_community.retrievers import BM25Retriever
 from sklearn.metrics.pairwise import cosine_similarity 
 import pickle
+import FlagEmbedding 
 import re
 import time
 import json
@@ -88,7 +89,7 @@ def on_lip_click(text_output,video_path='./shuziren.mp4'):
     video_output = audio2lip(text_output,video_path)
     return video_output
     
-rerank_path = './model/rerank_model'
+rerank_path = '/mnt/workspace/LvBanGPT/model/rerank_model'
 rerank_model_name = 'BAAI/bge-reranker-large'
 def extract_cities_from_text(text):
     # 从文本中提取城市名称，假设使用jieba进行分词和提取地名
