@@ -202,7 +202,7 @@ TAVILY_API_KEY=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
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%A9%E6%B0%94%E6%9F%A5%E8%AF%A2.png" alt="Demo" >
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E9%99%84%E8%BF%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%81%94%E7%BD%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
-  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%81%94%E7%BD%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%96%87%E6%A1%88%E7%94%9F%E6%88%90.png" alt="Demo" >
 </p>
 
 <h2 id="4"> 人员贡献 </h2>
