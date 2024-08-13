@@ -111,8 +111,26 @@ pip install -r requirements.txt
 ```
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E7%8E%AF%E5%A2%83%E5%8C%85%E4%B8%8B%E8%BD%BD.png"  style="zoom:40%;" />
 
-#### 3.下载重排模型
-打开
+#### 3.打开`down_rerank_model.ipynb`，下载重排模型
+
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E7%8E%AF%E5%A2%83%E5%8C%85%E4%B8%8B%E8%BD%BD.png"  style="zoom:40%;" />
+  
+#### 4.`app.py`代码修改
+
+#### 5.修改.env文件，添加自己相关的key
+
+```bash
+SPARKAI_APP_ID=36f6a1f2
+SPARKAI_API_SECRET=N2IzZDk0NjYzZDRjNmY3ZGUxY2U4MDA4
+SPARKAI_API_KEY=a9b7b68d8bc752e79c4e5dfa7e802a9c
+x_api_key=c71505b1-9d4a-469a-b8d4-39c6db1a97c3
+Weather_APP_KEY=417618eacc504fa4b729c18f4e8393cf
+amap_key=189a456127c050ee919cc22cff560412
+api_key=sk-75ec0872c7294913b61e799f40697508
+dashscope_api_key=sk-064b2c7a65b9478aab4d263c7bf7bdb9
+TAVILY_API_KEY=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
+```
+#### 6.运行app.py,即python3 app.py
 
 <h2 id="2"> 详细指南 </h2>
 
