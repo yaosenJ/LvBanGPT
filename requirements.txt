@@ -28,3 +28,4 @@ pypdf
 rank_bm25
 dashscope
 gradio
+FlagEmbedding
