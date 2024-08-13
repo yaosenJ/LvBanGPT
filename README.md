@@ -117,8 +117,11 @@ pip install -r requirements.txt
   
 #### 4.`app.py`代码修改
 
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81.png"  style="zoom:40%;" />
+
 #### 5.修改.env文件，添加自己相关的key
 
+vim .env 
 ```bash
 SPARKAI_APP_ID=36f6a1f2
 SPARKAI_API_SECRET=N2IzZDk0NjYzZDRjNmY3ZGUxY2U4MDA4
@@ -130,7 +133,8 @@ api_key=sk-75ec0872c7294913b61e799f40697508
 dashscope_api_key=sk-064b2c7a65b9478aab4d263c7bf7bdb9
 TAVILY_API_KEY=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
 ```
-#### 6.运行app.py,即python3 app.py
+#### 6.运行app.py,即python3 app.py,成功界面如下即可
+
 
 <h2 id="2"> 详细指南 </h2>
 
