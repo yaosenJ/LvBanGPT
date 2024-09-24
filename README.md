@@ -25,6 +25,7 @@
 - 多模态生成：**图生文**，**TTS**和**数字人**视频合成
 - 旅游问答**Agent**实现：**查询天气**、**附近搜索**、**联网搜索**
 - tts和数字人视频全部可预览查看、下载，提高体验
+- 语音识别对话
 
 ## 项目整体功能逻辑流程图
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="image-20240131182121394" style="zoom:100%;" />
@@ -50,6 +51,7 @@
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
+- [2024.09.24] 增加**语音识别对话**模块
 - [2024.08.13] 项目介绍视频发布：[B站](https://www.bilibili.com/video/BV1pxYye6ECE)
 - [2024.08.10] 完成PAI-DSW部署演示，以及操作文档撰写
 - [2024.08.10] **发布LvBan v1.5**[modelscope](https://www.modelscope.cn/studios/NumberJys/LvBan)
