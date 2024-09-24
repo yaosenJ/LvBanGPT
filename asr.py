@@ -7,9 +7,9 @@ from dwspark.config import Config
 from dwspark.models import ChatModel, Audio2Text
 
 # Configuration
-SPARKAI_APP_ID = '36f6a1f2'
-SPARKAI_API_SECRET = 'N2IzZDk0NjYzZDRjNmY3ZGUxY2U4MDA4'
-SPARKAI_API_KEY = 'a9b7b68d8bc752e79c4e5dfa7e802a9c'
+SPARKAI_APP_ID = '36'
+SPARKAI_API_SECRET = 'N2I'
+SPARKAI_API_KEY = 'a9b7b6'
 TEMP_AUDIO_DIR = "./"
 config = Config(SPARKAI_APP_ID, SPARKAI_API_KEY, SPARKAI_API_SECRET)
 
