@@ -202,7 +202,8 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 
 运行asr.py即可
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/asr.png" style="zoom:40%;" />
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/asr_test.png" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/asr_record.png" style="zoom:40%;" />
+  
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%97%85%E6%B8%B8%E6%94%BB%E7%95%A5.png" alt="Demo" >
