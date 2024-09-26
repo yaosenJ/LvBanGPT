@@ -19,19 +19,21 @@
 - 旅行文案助手
   
 **技术亮点**
-- 充分使用**星火大模型API矩阵能力**，包含星火大模型、图片理解、超拟人语音合成、embedding等
+- 充分使用**星火大模型API矩阵能力**，包含星火大模型、图片理解、超拟人语音合成、语音识别、文生图、embedding等
 - 旅游规划、文案生成**Prompt**高效设计，**ReAct**提示框架设计
 - **RAG**创新：根据用户query,**动态**加载，读取文本;**BM25检索**、**向量检索**的混合检索; **重排模型**高效使用
-- 多模态生成：**图生文**，**TTS**和**数字人**视频合成
+- 多模态生成：**图生文**，**文生图**，**TTS**，**ASR**和**数字人**视频合成
 - 旅游问答**Agent**实现：**查询天气**、**附近搜索**、**联网搜索**
-- tts和数字人视频全部可预览查看、下载，提高体验
-- 语音识别对话
+- 生成语音，生成图片和数字人视频全部可预览查看、下载，提高体验
 
 ## 项目整体功能逻辑流程图
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="image-20240131182121394" style="zoom:100%;" />
 
 ## 项目演示
-
+<details>
+<summary>LvBan_v1.5项目展示</summary>
+<br>
+<h2 id="3"> 项目展示 </h2>
 - 旅游规划助手
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%A7%84%E5%88%92%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
@@ -46,12 +48,16 @@
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%96%87%E6%A1%88%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
 </p>
+</details>
+
 
 
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
-- [2024.09.24] 增加**语音识别对话**模块
+- [2024.08.10] 全新优化界面，**发布LvBan v2.0**
+- [2024.09.20] 增加**语音识别对话**模块
+- [2024.09.05] 增加**文生图**模块
 - [2024.08.13] 项目介绍视频发布：[B站](https://www.bilibili.com/video/BV1pxYye6ECE)
 - [2024.08.10] 完成PAI-DSW部署演示，以及操作文档撰写
 - [2024.08.10] **发布LvBan v1.5**[modelscope](https://www.modelscope.cn/studios/NumberJys/LvBan)
