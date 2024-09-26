@@ -30,6 +30,7 @@
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="image-20240131182121394" style="zoom:100%;" />
 
 ## 项目演示
+
 <details>
 <summary>LvBan_v1.5项目展示</summary>
 <br>
