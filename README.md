@@ -98,6 +98,7 @@
 - 目前已将 `LvBan v2.0` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
 - `LvBan v2.0` 版本服务器部署链接：[http://120.27.156.91:1234/](http://120.27.156.91:1234/)  [https://1696-120-27-156-91.ngrok-free.app/](https://1696-120-27-156-91.ngrok-free.app/)
 <h3 id="1-2">本地部署 </h3>
+
 ```bash
 git clone https://github.com/yaosenJ/LvBanGPT.git
 cd LvBanGPT
