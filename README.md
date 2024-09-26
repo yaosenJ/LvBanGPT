@@ -32,10 +32,15 @@
 
 ## 项目演示
 
+<p align="center">
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%A7%84%E5%88%92%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
+</p>
+
 - 旅游规划助手
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%A7%84%E5%88%92%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
 </p>
+
 
 - 旅游问答助手
 <p align="center">
