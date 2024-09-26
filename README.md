@@ -35,7 +35,7 @@
 ## 项目演示
 
 - 旅游规划助手
-- 
+  
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%97%85%E6%B8%B8%E8%A7%84%E5%88%92%E5%8A%A9%E6%89%8Bv2.0.gif" alt="Demo gif" >
 </p>
