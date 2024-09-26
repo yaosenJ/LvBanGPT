@@ -28,10 +28,11 @@
 
 ## 项目整体功能逻辑流程图
 
+<p align="center">
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+</p>
 
 ## 项目演示
-
-
 <details>
 <summary>LvBan_v1.5项目展示</summary>
 <br>
