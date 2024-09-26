@@ -31,19 +31,16 @@ import dashscope
 from pydub import AudioSegment
 
 # 加载讯飞的api配置
-# SPARKAI_APP_ID = os.environ.get("SPARKAI_APP_ID")
-# SPARKAI_API_SECRET = os.environ.get("SPARKAI_API_SECRET")
-# SPARKAI_API_KEY = os.environ.get("SPARKAI_API_KEY")
+SPARKAI_APP_ID = os.environ.get("SPARKAI_APP_ID")
+SPARKAI_API_SECRET = os.environ.get("SPARKAI_API_SECRET")
+SPARKAI_API_KEY = os.environ.get("SPARKAI_API_KEY")
 
-SPARKAI_APP_ID = '36f6a1f2'
-SPARKAI_API_SECRET = 'N2IzZDk0NjYzZDRjNmY3ZGUxY2U4MDA4'
-SPARKAI_API_KEY = 'a9b7b68d8bc752e79c4e5dfa7e802a9c'
 
 config = Config(SPARKAI_APP_ID, SPARKAI_API_KEY, SPARKAI_API_SECRET)
 
-# dashscope.api_key = os.environ.get("dashscope_api_key")
+dashscope.api_key = os.environ.get("dashscope_api_key")
 
-dashscope.api_key = 'sk-064b2c7a65b9478aab4d263c7bf7bdb9'
+
 # 初始化模型
 iu = ImageUnderstanding(config)
 t2a = Text2Audio(config)
@@ -370,22 +367,22 @@ def get_weather_forecast(location_id,api_key):
         # 如果请求不成功，打印错误信息  
         print(f"请求失败，状态码：{response.status_code}，错误信息：{response.text}")  
         return None  
-#api_key = os.environ.get("api_key")
-# api_key = 'sk-91dd9102748744cfa611840920d2c32b'
-from openai import OpenAI
-# client = OpenAI(
-#         api_key=api_key,
-#         base_url="https://api.deepseek.com"
-# )
+api_key = os.environ.get("api_key")
 
+from openai import OpenAI
 client = OpenAI(
-        api_key='sk-064b2c7a65b9478aab4d263c7bf7bdb9',
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        api_key=api_key,
+        base_url="https://api.deepseek.com"
 )
+
+# client = OpenAI(
+#         api_key='',
+#         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+# )
 
 amap_key = os.environ.get("amap_key")
 
-def get_completion(messages, model="qwen-plus"):
+def get_completion(messages, model="deepseek-chat"):
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -544,8 +541,7 @@ def llm(query, history=[], user_stop_words=[]):
         return str(e)
 
 # Travily 搜索引擎
-# os.environ['TAVILY_API_KEY'] = os.environ.get("TAVILY_API_KEY")
-os.environ['TAVILY_API_KEY'] = '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'
+os.environ['TAVILY_API_KEY'] = os.environ.get("TAVILY_API_KEY")
 tavily = TavilySearchResults(max_results=5)
 tavily.description = '这是一个类似谷歌和百度的搜索引擎，搜索知识、天气、股票、电影、小说、百科等都是支持的哦，如果你不确定就应该搜索一下，谢谢！'
 
