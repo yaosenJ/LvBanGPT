@@ -168,54 +168,54 @@ def generate_image(prompt):
     return output_path
 
 
-# def load_rerank_model(model_name=rerank_model_name):
-#     """
-#     加载重排名模型。
+def load_rerank_model(model_name=rerank_model_name):
+    """
+    加载重排名模型。
     
-#     参数:
-#     - model_name (str): 模型的名称。默认为 'BAAI/bge-reranker-large'。
+    参数:
+    - model_name (str): 模型的名称。默认为 'BAAI/bge-reranker-large'。
     
-#     返回:
-#     - FlagReranker 实例。
+    返回:
+    - FlagReranker 实例。
     
-#     异常:
-#     - ValueError: 如果模型名称不在批准的模型列表中。
-#     - Exception: 如果模型加载过程中发生任何其他错误。
-#     """ 
-#     if not os.path.exists(rerank_path):
-#         os.makedirs(rerank_path, exist_ok=True)
-#     rerank_model_path = os.path.join(rerank_path, model_name.split('/')[1] + '.pkl')
-#     #print(rerank_model_path)
-#     logger.info('Loading rerank model...')
-#     if os.path.exists(rerank_model_path):
-#         try:
-#             with open(rerank_model_path , 'rb') as f:
-#                 reranker_model = pickle.load(f)
-#                 logger.info('Rerank model loaded.')
-#                 return reranker_model
-#         except Exception as e:
-#             logger.error(f'Failed to load embedding model from {rerank_model_path}') 
-#     else:
-#         try:
-#             os.system('apt install git')
-#             os.system('apt install git-lfs')
-#             os.system(f'git clone https://code.openxlab.org.cn/answer-qzd/bge_rerank.git {rerank_path}')
-#             os.system(f'cd {rerank_path} && git lfs pull')
+    异常:
+    - ValueError: 如果模型名称不在批准的模型列表中。
+    - Exception: 如果模型加载过程中发生任何其他错误。
+    """ 
+    if not os.path.exists(rerank_path):
+        os.makedirs(rerank_path, exist_ok=True)
+    rerank_model_path = os.path.join(rerank_path, model_name.split('/')[1] + '.pkl')
+    #print(rerank_model_path)
+    logger.info('Loading rerank model...')
+    if os.path.exists(rerank_model_path):
+        try:
+            with open(rerank_model_path , 'rb') as f:
+                reranker_model = pickle.load(f)
+                logger.info('Rerank model loaded.')
+                return reranker_model
+        except Exception as e:
+            logger.error(f'Failed to load embedding model from {rerank_model_path}') 
+    else:
+        try:
+            os.system('apt install git')
+            os.system('apt install git-lfs')
+            os.system(f'git clone https://code.openxlab.org.cn/answer-qzd/bge_rerank.git {rerank_path}')
+            os.system(f'cd {rerank_path} && git lfs pull')
             
-#             with open(rerank_model_path , 'rb') as f:
-#                 reranker_model = pickle.load(f)
-#                 logger.info('Rerank model loaded.')
-#                 return reranker_model
+            with open(rerank_model_path , 'rb') as f:
+                reranker_model = pickle.load(f)
+                logger.info('Rerank model loaded.')
+                return reranker_model
                 
-#         except Exception as e:
-#             logger.error(f'Failed to load rerank model: {e}')
+        except Exception as e:
+            logger.error(f'Failed to load rerank model: {e}')
 
-# def rerank(reranker, query, contexts, select_num):
-#         merge = [[query, context] for context in contexts]
-#         scores = reranker.compute_score(merge)
-#         sorted_indices = np.argsort(scores)[::-1]
+def rerank(reranker, query, contexts, select_num):
+        merge = [[query, context] for context in contexts]
+        scores = reranker.compute_score(merge)
+        sorted_indices = np.argsort(scores)[::-1]
 
-#         return [contexts[i] for i in sorted_indices[:select_num]]
+        return [contexts[i] for i in sorted_indices[:select_num]]
 
 def embedding_make(text_input, pdf_directory):
 
@@ -247,8 +247,7 @@ def embedding_make(text_input, pdf_directory):
         question=text_input
         
         retriever = BM25Retriever.from_documents(splits)
-        #retriever.k = 20
-        retriever.k = 10
+        retriever.k = 20
         bm25_result = retriever.invoke(question)
 
 
@@ -278,18 +277,18 @@ def embedding_make(text_input, pdf_directory):
             emb_list.append(all_page)
         print(len(emb_list))
 
-        #reranker_model = load_rerank_model()
+        reranker_model = load_rerank_model()
 
-        #documents = rerank(reranker_model, question, emb_list, 3)
-        #logger.info("After rerank...")
-        # reranked = []
-        # for doc in documents:
-        #     reranked.append(doc)
-        # print(len(reranked))
-        # reranked = ''.join(reranked)
+        documents = rerank(reranker_model, question, emb_list, 3)
+        logger.info("After rerank...")
+        reranked = []
+        for doc in documents:
+            reranked.append(doc)
+        print(len(reranked))
+        reranked = ''.join(reranked)
 
-        model_input = f'你是一个旅游攻略小助手，你的任务是，根据收集到的信息：\n{emb_list}.\n来精准回答用户所提出的问题：{question}。'
-        #print(reranked)
+        model_input = f'你是一个旅游攻略小助手，你的任务是，根据收集到的信息：\n{reranked}.\n来精准回答用户所提出的问题：{question}。'
+        print(reranked)
 
         model = ChatModel(config, stream=False)
         output = model.generate([ChatMessage(role="user", content=model_input)])
@@ -311,8 +310,6 @@ def process_question(history, use_knowledge_base, question, pdf_directory='./dat
 def clear_history(history):
     history.clear()
     return history
-
-
 
 # 获取城市信息 
 def get_location_data(location,api_key):  
