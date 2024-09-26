@@ -207,10 +207,15 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
+- 旅游规划助手
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E6%97%85%E6%B8%B8%E8%A7%84%E5%88%92v2.0.png" alt="Demo" >
+- 知识库问答(RAG:true)
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94v2.0_1.png" alt="Demo" >
+- 知识库问答(RAG:false)
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94v2.0_2.png" alt="Demo" >
+- 附近查询&联网搜索@天气查询
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E5%AE%9E%E5%86%B5%E6%9F%A5%E8%AF%A2v2.0.png" alt="Demo" >
+- 旅游文案助手
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E6%97%85%E6%B8%B8%E6%96%87%E6%A1%88v2.0.png" alt="Demo" >
 </p>
 
