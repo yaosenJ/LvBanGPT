@@ -186,7 +186,7 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 
 <h3 id="2-3"> 多模态生成：图生文，文生图，TTS，ASR和数字人视频合成 </h3>
 
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90.gif" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90v2.0.png" style="zoom:40%;" />
   
 通过将文本数据处理成音频数据后同视频一起输入，先使用脚本处理视频，该脚本首先会预先进行必要的预处理，例如人脸检测、人脸解析和 VAE 编码等。对音频和图片通过唇同步模型处理，生成对应唇形的照片，匹配所有的音频，最终将音频与生成的图片合成为视频输出。
 
