@@ -95,8 +95,8 @@
 
 <h3 id="1-1">在线体验 </h3>
 
-目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
-
+- 目前已将 `LvBan v2.0` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
+- `LvBan v2.0` 版本服务器链接：[http://120.27.156.91:1234/](http://120.27.156.91:1234/) 
 <h3 id="1-2">本地部署 </h3>
 
 ```bash
@@ -158,9 +158,13 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
   
 - 大语言模型：星火大模型(Spark3.5 Max)
 - 图片理解模型：星火图片理解模型
+- 图片生成模型，星火文生图模型
 - 语音合成模型：星火语音合成模型
+- 语音识别模型：星火语音识别模型
 - 向量模型：星火文本向量模型
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0.png" style="zoom:40%;" />
+- 
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B01.png" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B02.png" style="zoom:40%;" />
   
 <h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
 该项目的RAG系统，首先从用户的查询中提取关键信息（如城市名称、地点名称等），并通过这些信息检索匹配的pdf文件，提取相关内容并计算其嵌入向量。然后利用BM25检索和向量检索技术，筛选出与用户查询相似度较高的文本块。在此基础上，利用重排序模型对这些文本块进行进一步排序，最终选择最相关的内容提供给星火大模型。星火大模型根据这些上下文信息，生成对用户问题的准确回答。其详细技术实现流程：
