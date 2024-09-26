@@ -5,18 +5,17 @@ from gradio.components import HTML
 import uuid
 from sparkai.core.messages import ChatMessage, AIMessageChunk
 from dwspark.config import Config
-from dwspark.models import ChatModel, ImageUnderstanding, Text2Audio, Audio2Text, EmbeddingModel
+from dwspark.models import ChatModel, ImageUnderstanding, Text2Audio, Audio2Text, EmbeddingModel,Text2Img
 from PIL import Image
 import io
 import base64
 import random
-from langchain.vectorstores.chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders.pdf import PyMuPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.retrievers import BM25Retriever
 from sklearn.metrics.pairwise import cosine_similarity 
 import pickle
-import FlagEmbedding 
 import re
 import time
 import json
@@ -29,21 +28,28 @@ import datetime
 from http import HTTPStatus
 from dashscope import Generation
 import dashscope
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
+from pydub import AudioSegment
+
 # 加载讯飞的api配置
-SPARKAI_APP_ID = os.getenv("SPARKAI_APP_ID")
-SPARKAI_API_SECRET = os.getenv("SPARKAI_API_SECRET")
-SPARKAI_API_KEY = os.getenv("SPARKAI_API_KEY")
+SPARKAI_APP_ID = os.environ.get("SPARKAI_APP_ID")
+SPARKAI_API_SECRET = os.environ.get("SPARKAI_API_SECRET")
+SPARKAI_API_KEY = os.environ.get("SPARKAI_API_KEY")
+
+
 config = Config(SPARKAI_APP_ID, SPARKAI_API_KEY, SPARKAI_API_SECRET)
-dashscope.api_key = os.getenv("dashscope_api_key")
+
+dashscope.api_key = os.environ.get("dashscope_api_key")
+
+
 # 初始化模型
 iu = ImageUnderstanding(config)
 t2a = Text2Audio(config)
-
+a2t = Audio2Text(config)
+t2i = Text2Img(config)
 # 临时存储目录
 TEMP_IMAGE_DIR = "/tmp/sparkai_images/"
 #AUDIO_TEMP_DIR = "/tmp/sparkai_audios/"
+TEMP_AUDIO_DIR = "./static"
 
 style_options = ["朋友圈", "小红书", "微博", "抖音"]
 
@@ -88,8 +94,48 @@ def on_convert_click(text_output):
 def on_lip_click(text_output,video_path='./shuziren.mp4'):
     video_output = audio2lip(text_output,video_path)
     return video_output
-    
-rerank_path = '/mnt/workspace/LvBanGPT/model/rerank_model'
+
+#音频处理函数
+def process_audio_file(audio_path):
+    audio_segment = AudioSegment.from_file(audio_path)
+    audio_segment = audio_segment.set_frame_rate(16000).set_sample_width(2).set_channels(1)
+
+    unique_filename = 'audio' + ".mp3"
+    temp_filepath = os.path.join(TEMP_AUDIO_DIR, unique_filename)
+    audio_segment.export(temp_filepath, format="mp3")
+    return temp_filepath
+
+def process_audio(audio, history):
+    print(f"接收到的音频: {audio}, 类型: {type(audio)}")  # Debugging information
+
+    if audio is None:
+        return "没有接收到音频文件，请上传一个音频文件。", history
+
+    if isinstance(audio, str) and os.path.isfile(audio):
+        audio_path = process_audio_file(audio)
+        print(f"处理的音频文件路径: {audio_path}")
+
+        try:
+            audio_text = a2t.gen_text(audio_path)
+            print(f"语音识别结果：{audio_text}")
+
+            if not audio_text.strip():
+                return "未识别到语音，请重试。", history
+            model = ChatModel(config, stream=False)
+            response = model.generate([ChatMessage(role="user", content=audio_text)])
+            print(f"生成的响应: {response}")
+
+            # 确保历史记录更新为元组格式
+            history.append((audio_text, response))
+            return history  # 确保返回空字符串和更新后的历史记录
+
+        except Exception as e:
+            return f"处理音频时发生错误: {str(e)}", history
+
+    return "无效的音频文件，请上传有效的音频。", history
+
+
+rerank_path = './model/rerank_model'
 rerank_model_name = 'BAAI/bge-reranker-large'
 def extract_cities_from_text(text):
     # 从文本中提取城市名称，假设使用jieba进行分词和提取地名
@@ -114,6 +160,12 @@ def get_embedding_pdf(text, pdf_directory):
     # 根据城市名称匹配PDF文件
     city_to_pdfs = find_pdfs_with_city(cities, pdf_directory)
     return city_to_pdfs
+    
+def generate_image(prompt):
+    logger.info(f'生成图片: {prompt}')
+    output_path = './demo.jpg'
+    t2i.gen_image(prompt, output_path)
+    return output_path
 
 
 def load_rerank_model(model_name=rerank_model_name):
@@ -312,14 +364,20 @@ def get_weather_forecast(location_id,api_key):
         # 如果请求不成功，打印错误信息  
         print(f"请求失败，状态码：{response.status_code}，错误信息：{response.text}")  
         return None  
-api_key = os.getenv("api_key")
+api_key = os.environ.get("api_key")
+
 from openai import OpenAI
 client = OpenAI(
         api_key=api_key,
         base_url="https://api.deepseek.com"
 )
 
-amap_key = os.getenv("amap_key")
+# client = OpenAI(
+#         api_key='',
+#         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+# )
+
+amap_key = os.environ.get("amap_key")
 
 def get_completion(messages, model="deepseek-chat"):
     response = client.chat.completions.create(
@@ -480,7 +538,7 @@ def llm(query, history=[], user_stop_words=[]):
         return str(e)
 
 # Travily 搜索引擎
-os.environ['TAVILY_API_KEY'] = os.getenv("TAVILY_API_KEY")
+os.environ['TAVILY_API_KEY'] = os.environ.get("TAVILY_API_KEY")
 tavily = TavilySearchResults(max_results=5)
 tavily.description = '这是一个类似谷歌和百度的搜索引擎，搜索知识、天气、股票、电影、小说、百科等都是支持的哦，如果你不确定就应该搜索一下，谢谢！'
 
@@ -585,6 +643,32 @@ def process_network(query):
     success, result, my_history = agent_execute_with_retry(query, chat_history=my_history)
     return result
 
+
+css="""
+#col-left {
+    margin: 0 auto;
+    max-width: 430px;
+}
+#col-mid {
+    margin: 0 auto;
+    max-width: 430px;
+}
+#col-right {
+    margin: 0 auto;
+    max-width: 430px;
+}
+#col-showcase {
+    margin: 0 auto;
+    max-width: 1100px;
+}
+#button {
+    color: blue;
+}
+
+"""
+
+
+
 # 旅行规划师功能
 
 prompt = """你现在是一位专业的旅行规划师，你的责任是根据旅行出发地、目的地、天数、行程风格（紧凑、适中、休闲）、预算、随行人数，帮助我规划旅游行程并生成详细的旅行计划表。请你以表格的方式呈现结果。旅行计划表的表头请包含日期、地点、行程计划、交通方式、餐饮安排、住宿安排、费用估算、备注。所有表头都为必填项，请加深思考过程，严格遵守以下规则：
@@ -621,11 +705,10 @@ def chat(chat_destination, chat_history, chat_departure, chat_days, chat_style, 
         yield '', chat_history
 
 # Gradio接口定义
-with gr.Blocks() as demo:
+with gr.Blocks(css=css) as demo:
     html_code = """
-        <!DOCTYPE html>
-        <html lang="zh-CN">
-        <head>
+     <!DOCTYPE html>
+        <html lang="zh-CN">        <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
@@ -663,78 +746,129 @@ with gr.Blocks() as demo:
                 }
             </style>
         </head>
-        <body>
+    <body>
             <div class="container">
                 <div class="logo">
-                    <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/logo.png?raw=true" alt="Logo" width="30%">
+                    <img src="https://img.picui.cn/free/2024/09/25/66f3cdc149a78.png" alt="Logo" width="30%">
                 </div>
                 <div class="content">
-                    <h2>😀 亲爱的旅游爱好者们，欢迎来到“LvBan恣行”，您的专属旅行伙伴！我们致力于为您提供个性化的旅行规划、陪伴和分享服务，让您的旅程充满乐趣并留下难忘回忆。</h2>
-                <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
-                    <p>“LvBan恣行”基于星火大模型的文生文、图生文以及文生语音等技术，旨在为您量身定制一份满意的旅行计划。无论您期望体验何种旅行目的地、天数、行程风格（如紧凑、适中或休闲）、预算以及随行人数，我们的助手都能为您精心规划行程并生成详尽的旅行计划表，包括每天的行程安排、交通方式以及需要注意的事项。</p>
-                    <p>此外，我们还采用RAG技术，专为提供实用全方位信息而设计，包括景点推荐、活动安排、餐饮、住宿、购物、行程推荐以及实用小贴士等。目前，我们的知识库已涵盖全国各地区、城市的旅游攻略信息，为您提供丰富多样的旅行建议。</p>
-                    <p>您还可以随时拍摄旅途中的照片，并通过我们的应用上传。应用将自动为您生成适应不同社交媒体平台（如朋友圈、小红书、抖音、微博）的文案风格，让您轻松分享旅途中的点滴，与朋友们共同感受旅游的乐趣。</p>
-                    <p>立即加入“LvBan恣行”，让我们为您的旅行保驾护航，共同打造一段难忘的旅程！</p>
-                </div>
+                    <h2>😀 欢迎来到“LvBan恣行”，您的专属旅行伙伴！我们致力于为您提供个性化的旅行规划、陪伴和分享服务，让您的旅程充满乐趣并留下难忘回忆。\n</h2>     
                 </div>
             </div>
-        </body>
-        </html>
+    </body>
 """
+
+#     html_code = """
+#         <!DOCTYPE html>
+#         <html lang="zh-CN">
+#         <head>
+#             <meta charset="UTF-8">
+#             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#             <style>
+#                 body {
+#                     font-family: 'Arial', sans-serif;
+#                     background-color: #f8f9fa;
+#                     margin: 0;
+#                     padding: 10px;
+#                 }
+#                 .container {
+#                     max-width: 1500px;
+#                     margin: auto;
+#                     background-color: #ffffff;
+#                     border-radius: 10px;
+#                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+#                     padding: 10px;
+#                 }
+#                 .logo img {
+#                     display: block;
+#                     margin: 0 auto;
+#                     border-radius: 7px;
+#                 }
+#                 .content h2 {
+#                     text-align: center;
+#                     color: #999999;
+#                     font-size: 24px;
+#                     margin-top: 20px;
+#                 }
+#                 .content p {
+#                     text-align: center;
+#                     color: #cccccc;
+#                     font-size: 16px;
+#                     line-height: 1.5;
+#                     margin-top: 30px;
+#                 }
+#             </style>
+#         </head>
+#         <body>
+#             <div class="container">
+#                 <div class="logo">
+#                     <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/logo.png" alt="Logo" width="30%">
+#                 </div>
+#                 <div class="content">
+#                     <h2>😀 亲爱的旅游爱好者们，欢迎来到“LvBan恣行”，您的专属旅行伙伴！我们致力于为您提供个性化的旅行规划、陪伴和分享服务，让您的旅程充满乐趣并留下难忘回忆。</h2>
+#                 <div class="hint" style="text-align: center;background-color: rgba(255, 255, 0, 0.15); padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ffcc00;">
+#                     <p>“LvBan恣行”基于星火大模型的文生文、图生文以及文生语音等技术，旨在为您量身定制一份满意的旅行计划。无论您期望体验何种旅行目的地、天数、行程风格（如紧凑、适中或休闲）、预算以及随行人数，我们的助手都能为您精心规划行程并生成详尽的旅行计划表，包括每天的行程安排、交通方式以及需要注意的事项。</p>
+#                     <p>此外，我们还采用RAG技术，专为提供实用全方位信息而设计，包括景点推荐、活动安排、餐饮、住宿、购物、行程推荐以及实用小贴士等。目前，我们的知识库已涵盖全国各地区、城市的旅游攻略信息，为您提供丰富多样的旅行建议。</p>
+#                     <p>您还可以随时拍摄旅途中的照片，并通过我们的应用上传。应用将自动为您生成适应不同社交媒体平台（如朋友圈、小红书、抖音、微博）的文案风格，让您轻松分享旅途中的点滴，与朋友们共同感受旅游的乐趣。</p>
+#                     <p>立即加入“LvBan恣行”，让我们为您的旅行保驾护航，共同打造一段难忘的旅程！</p>
+#                 </div>
+#                 </div>
+#             </div>
+#         </body>
+#         </html>
+# """
     gr.HTML(html_code)
     with gr.Tab("旅行规划助手"):
-         # 输入框
-        chat_departure = gr.Textbox(label="输入旅游出发地", placeholder="请你输入出发地")
-        chat_destination = gr.Textbox(label="输入旅游目的地", placeholder="请你输入想去的地方")
+        # with gr.Group():
+        with gr.Row():
+            chat_departure = gr.Textbox(label="输入旅游出发地", placeholder="请你输入出发地")
+            gr.Examples(["合肥", "郑州", "西安", "北京", "广州", "大连","厦门","南京", "大理", "上海","成都","黄山"], chat_departure, label='出发地示例',examples_per_page= 12)
+            chat_destination = gr.Textbox(label="输入旅游目的地", placeholder="请你输入想去的地方")
+            gr.Examples(["合肥", "郑州", "西安", "北京", "广州", "大连","厦门","南京", "大理", "上海","成都","黄山"], chat_destination, label='目的地示例',examples_per_page= 12)
         
         with gr.Accordion("个性化选择（天数，行程风格，预算，随行人数）", open=False):
-            chat_days = gr.Slider(minimum=1, maximum=10, step=1, value=3, label='旅游天数')
-            chat_style = gr.Radio(choices=['紧凑', '适中', '休闲'], value='适中', label='行程风格')
-            chat_budget = gr.Textbox(label="输入预算(带上单位)", placeholder="请你输入预算")
-            chat_people = gr.Textbox(label="输入随行人数", placeholder="请你输入随行人数")
-            chat_other = gr.Textbox(label="特殊偏好、要求(可写无)", placeholder="请你特殊偏好、要求")
-        # 聊天对话框
-        chatbot = gr.Chatbot([], elem_id="chat-box", label="聊天窗口", height=1000)
+            with gr.Group():
+                with gr.Row():
+                    chat_days = gr.Slider(minimum=1, maximum=10, step=1, value=3, label='旅游天数')
+                    chat_style = gr.Radio(choices=['紧凑', '适中', '休闲'], value='适中', label='行程风格',elem_id="button")
+                    chat_budget = gr.Textbox(label="输入预算(带上单位)", placeholder="请你输入预算")
+                with gr.Row():   
+                    chat_people = gr.Textbox(label="输入随行人数", placeholder="请你输入随行人数")
+                    chat_other = gr.Textbox(label="特殊偏好、要求(可写无)", placeholder="请你特殊偏好、要求")
+                # 聊天对话框
+        llm_submit_tab = gr.Button("发送", visible=True,elem_id="button")
+        chatbot = gr.Chatbot([], elem_id="chat-box", label="聊天窗口", height=600)
         # 按钮
-        llm_submit_tab = gr.Button("发送", visible=True)
-        # 问题样例
-        gr.Examples(["合肥", "郑州", "西安", "北京", "广州", "大连"], chat_departure)
-        gr.Examples(["北京", "南京", "大理", "上海", "东京", "巴黎"], chat_destination)
+        # llm_submit_tab = gr.Button("发送", visible=True,variant="primary")
+        # # 问题样例
+        # gr.Examples(["合肥", "郑州", "西安", "北京", "广州", "大连"], chat_departure)
+        # gr.Examples(["北京", "南京", "大理", "上海", "东京", "巴黎"], chat_destination)
         # 按钮出发逻辑
         llm_submit_tab.click(fn=chat, inputs=[chat_destination, chatbot, chat_departure, chat_days, chat_style, chat_budget, chat_people, chat_other], outputs=[ chat_destination,chatbot])
-        
-    with gr.Tab("旅游问答助手"):
-        chatbot = gr.Chatbot(label="聊天记录")
-        msg = gr.Textbox(lines=2,placeholder="请输入您的问题（旅游景点、活动、餐饮、住宿、购物、推荐行程、小贴士等实用信息）",label="提供景点推荐、活动安排、餐饮、住宿、购物、行程推荐、实用小贴士等实用信息")
-        whether_rag = gr.Radio(choices=['是','否'], value='否', label='是否启用RAG')
-        submit_button = gr.Button("发送")
-        clear_button = gr.Button("清除对话")
-        # 问题样例
-        gr.Examples(["我想去香港玩，你有什么推荐的吗？","我计划暑假带家人去云南旅游，请问有哪些必游的自然风光和民族文化景点？","下个月我将在西安，想了解秦始皇兵马俑开通时间以及交通信息","第一次去西藏旅游，需要注意哪些高原反应的预防措施？","去三亚度假，想要住海景酒店，性价比高的选择有哪些？","去澳门旅游的最佳时间是什么时候？","计划一次五天四夜的西安深度游，怎样安排行程比较合理，能覆盖主要景点？","在杭州，哪些家餐馆可以推荐去的？"], msg)
-        def respond(message, chat_history, use_kb):
+    def respond(message, chat_history, use_kb):
             return process_question(chat_history, use_kb, message)
-
-        def clear_chat(chat_history):
-            return clear_history(chat_history)
-
+    def clear_chat(chat_history):
+        return clear_history(chat_history)    
+    with gr.Tab("旅游问答助手"):
+        with gr.Tab("知识库问答"):
+            with gr.Row():
+                with gr.Column():
+                    msg = gr.Textbox(lines=2,placeholder="请输入您的问题（旅游景点、活动、餐饮、住宿、购物、推荐行程、小贴士等实用信息）",label="提供景点推荐、活动安排、餐饮、住宿、购物、行程推荐、实用小贴士等实用信息")
+                    with gr.Row():
+                        whether_rag = gr.Radio(choices=['是','否'], value='否', label='是否启用RAG')
+                    with gr.Row():
+                        submit_button = gr.Button("发送", elem_id="button")
+                        clear_button = gr.Button("清除对话", elem_id="button")
+            
+                    # 问题样例
+                    gr.Examples(["我想去香港玩，你有什么推荐的吗？","在杭州，哪些家餐馆可以推荐去的？","我计划暑假带家人去云南旅游，请问有哪些必游的自然风光和民族文化景点？","下个月我将在西安，想了解秦始皇兵马俑开通时间以及交通信息","第一次去西藏旅游，需要注意哪些高原反应的预防措施？","去三亚度假，想要住海景酒店，性价比高的选择有哪些？","去澳门旅游的最佳时间是什么时候？","计划一次五天四夜的西安深度游，怎样安排行程比较合理，能覆盖主要景点？"], msg)
+            
+                with gr.Column():
+                    chatbot = gr.Chatbot(label="聊天记录",height=521)
         submit_button.click(respond, [msg, chatbot, whether_rag], [msg, chatbot])
-        clear_button.click(clear_chat, chatbot, chatbot)
-        weather_input = gr.Textbox(label="请输入城市名查询天气", placeholder="例如：北京")
-        weather_output = gr.HTML(value="", label="天气查询结果")
-        query_button = gr.Button("查询天气")
-        query_near = gr.Textbox(label="搜索附近的餐饮、酒店等", placeholder="例如：合肥市高新区中国声谷产业园附近的美食")
-        result = gr.Textbox(label="查询结果", lines=10)
-        submit_btn = gr.Button("查询附近的餐饮、酒店等")
-        gr.Examples(["合肥市高新区中国声谷产业园附近的美食", "北京三里屯附近的咖啡", "南京市玄武区新街口附近的甜品店", "上海浦东新区陆家嘴附近的热门餐厅", "武汉市光谷步行街附近的火锅店", "广州市天河区珠江新城附近的酒店"], query_near)
-        submit_btn.click(process_request, inputs=[query_near], outputs=[result])
-        
-        query_network = gr.Textbox(label="联网搜索问题", placeholder="例如：秦始皇兵马俑开放时间")
-        result_network = gr.Textbox(label="搜索结果", lines=10)
-        submit_btn_network = gr.Button("联网搜索")
-        gr.Examples(["秦始皇兵马俑开放时间", "合肥有哪些美食", "北京故宫开放时间", "黄山景点介绍", "上海迪士尼门票需要多少钱"], query_network)
-        submit_btn_network.click(process_network, inputs=[query_network], outputs=[result_network])
-        
-        Weather_APP_KEY = os.getenv("Weather_APP_KEY")
+        clear_button.click(clear_chat, chatbot, chatbot)        
+        # Weather_APP_KEY = os.environ.get("Weather_APP_KEY")
+        Weather_APP_KEY = '797ab5e76cdf458b82b1283e100b9a5b'
         def weather_process(location):
                 api_key = Weather_APP_KEY  # 替换成你的API密钥  
                 location_data = get_location_data(location, api_key)
@@ -787,30 +921,88 @@ with gr.Blocks() as demo:
                 html_content += "</table>"  
   
                 return HTML(html_content)  
-        query_button.click(weather_process, [weather_input], [weather_output])
-    
 
+        def clear_history_audio(history):
+            history.clear()
+            return history
+
+        def clear_chat_audio(chat_history):
+            return clear_history_audio(chat_history)
+
+        with gr.Tab("附近查询&联网搜索&天气查询"):
+            
+            with gr.Row():
+                with gr.Column():
+                    query_near = gr.Textbox(label="查询附近的餐饮、酒店等", placeholder="例如：合肥市高新区中国声谷产业园附近的美食")
+                    result = gr.Textbox(label="查询结果", lines=2)
+                    submit_btn = gr.Button("查询附近的餐饮、酒店等",elem_id="button")
+                    gr.Examples(["合肥市高新区中国声谷产业园附近的美食", "北京三里屯附近的咖啡", "南京市玄武区新街口附近的甜品店", "上海浦东新区陆家嘴附近的热门餐厅", "武汉市光谷步行街附近的火锅店", "广州市天河区珠江新城附近的酒店"], query_near)
+                
+                    submit_btn.click(process_request, inputs=[query_near], outputs=[result])
+                with gr.Column():
+                    query_network = gr.Textbox(label="联网搜索问题", placeholder="例如：秦始皇兵马俑开放时间")
+                    result_network = gr.Textbox(label="搜索结果", lines=2)
+
+
+                    submit_btn_network = gr.Button("联网搜索",elem_id="button")
+                    gr.Examples(["秦始皇兵马俑开放时间", "合肥有哪些美食", "北京故宫开放时间", "黄山景点介绍", "上海迪士尼门票需要多少钱"], query_network)
+                    submit_btn_network.click(process_network, inputs=[query_network], outputs=[result_network])
+
+            weather_input = gr.Textbox(label="请输入城市名查询天气", placeholder="例如：北京")
+            weather_output = gr.HTML(value="", label="天气查询结果")
+            query_button = gr.Button("查询天气",elem_id="button")
+            query_button.click(weather_process, [weather_input], [weather_output])
+        
+        # gr.Markdown("<h1 style='text-align: center;'>由于gr.Audio(type=\"filepath\")函数输出音频临时路径，没法指定路径，导致创空间没法保存。若想体验语音识别对话，请您本地部署或服务器部署</h1>")
+        with gr.Tab("语音对话"):
+            with gr.Row():
+                with gr.Column():
+                    audio_input = gr.Audio(type="filepath")
+                    with gr.Row():
+                        submit_btn_audio = gr.Button("语音识别对话",elem_id="button")
+                        clear_btn_audio = gr.Button("清空历史",elem_id="button")
+                chatbot_audio = gr.Chatbot(label="聊天记录",type="tuples",height= 600)
+                submit_btn_audio.click(process_audio, inputs=[audio_input, chatbot_audio], outputs=[chatbot_audio])
+                clear_btn_audio.click(clear_chat_audio, chatbot_audio, chatbot_audio)
+            
+
+            
     with gr.Tab("旅行文案助手"):
         with gr.Row():
-            image_input = gr.Image(type="pil", label="上传图像")
-            style_dropdown = gr.Dropdown(choices=style_options, label="选择风格模式", value="朋友圈")
-            audio_output = gr.Audio(label="音频播放", interactive=False, visible=True)
-            video_output = gr.Video(label="数字人",visible=True)
+            with gr.Column():
+                image_input = gr.Image(type="pil", label="上传图像",height= 230)                
+                
+            with gr.Column():    
+                style_dropdown = gr.Dropdown(choices=style_options, label="选择风格模式", value="朋友圈")
+            # with gr.Column():
+                audio_output = gr.Audio(label="音频播放", interactive=False, visible=True)
 
-        with gr.Column():
-            generate_button = gr.Button("生成文案", visible=True)
-            generated_text = gr.Textbox(lines=8, label="生成的文案", visible=True)
-                     
+            with gr.Column():
+                video_output = gr.Video(label="数字人",visible=True)
+                
+        with gr.Row():
+            generate_button = gr.Button("第一步：生成文案", visible=True,elem_id="button")
+            convert_button1 = gr.Button("第二步：文案转语音", visible=True,elem_id="button")
+            convert_button2 = gr.Button("第三步：文案转视频(请耐心等待)", visible=True,elem_id="button")
+        with gr.Row():
+            with gr.Column():
+                
+                generated_text = gr.Textbox(lines=7, label="生成的文案", visible=True)
+                prompt_input = gr.Textbox(label="文生图输入提示", placeholder="可以把生成文案输入到这里，帮你生成图片")
+                generate_btn = gr.Button("生成图片",elem_id="button") 
+            with gr.Column():
+                output_image = gr.Image(label="生成的图片",height= 400)     
         generate_button.click(on_generate_click, inputs=[image_input, style_dropdown], outputs=[generated_text])
-        convert_button1 = gr.Button("将文案转为语音", visible=True)
+       
         convert_button1.click(on_convert_click, inputs=[generated_text], outputs=[audio_output])
-        convert_button2 = gr.Button("将文案转为视频(请耐心等待)", visible=True)
+        
         convert_button2.click(on_lip_click, inputs=[generated_text],outputs=[video_output])
 
-# if __name__ == "__main__":
-#     print("启动 Gradio 界面...")
-#     demo.queue()  # 启用队列处理请求
-#     demo.launch(root_path='/dsw-619620/proxy/7860/')
+        
+             
+            
+        
+        generate_btn.click(generate_image, inputs=prompt_input, outputs=output_image)
 
 if __name__ == "__main__":
     demo.queue().launch(share=True)

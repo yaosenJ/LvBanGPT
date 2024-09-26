@@ -19,22 +19,22 @@
 - 旅行文案助手
   
 **技术亮点**
-- 充分使用**星火大模型API矩阵能力**，包含星火大模型、图片理解、超拟人语音合成、embedding等
+- 充分使用**星火大模型API矩阵能力**，包含星火大模型、图片理解、语音合成、语音识别、文生图、embedding等
 - 旅游规划、文案生成**Prompt**高效设计，**ReAct**提示框架设计
 - **RAG**创新：根据用户query,**动态**加载，读取文本;**BM25检索**、**向量检索**的混合检索; **重排模型**高效使用
-- 多模态生成：**图生文**，**TTS**和**数字人**视频合成
+- 多模态生成：**图生文**，**文生图**，**TTS**，**ASR**和**数字人**视频合成
 - 旅游问答**Agent**实现：**查询天气**、**附近搜索**、**联网搜索**
-- tts和数字人视频全部可预览查看、下载，提高体验
-- 语音识别对话
+- 生成语音，生成图片和数字人视频全部可预览查看、下载，提高体验
 
 ## 项目整体功能逻辑流程图
 
 
 ## 项目演示
 
-<p align="center">
-  <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%97%85%E6%B8%B8%E9%97%AE%E7%AD%94%E5%8A%A9%E6%89%8Bv2.0.gif" alt="Demo gif" >
-</p>
+
+<details>
+<summary>LvBan_v1.5项目展示</summary>
+<br>
 
 - 旅游规划助手
 <p align="center">
@@ -51,12 +51,17 @@
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%96%87%E6%A1%88%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
 </p>
+  
+</details>
+
 
 
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
-- [2024.09.24] 增加**语音识别对话**模块
+- [2024.09.24] 全新优化界面，**发布LvBan v2.0**
+- [2024.09.20] 增加**语音识别对话**模块
+- [2024.09.05] 增加**文生图**模块
 - [2024.08.13] 项目介绍视频发布：[B站](https://www.bilibili.com/video/BV1pxYye6ECE)
 - [2024.08.10] 完成PAI-DSW部署演示，以及操作文档撰写
 - [2024.08.10] **发布LvBan v1.5**[modelscope](https://www.modelscope.cn/studios/NumberJys/LvBan)
@@ -94,8 +99,8 @@
 
 <h3 id="1-1">在线体验 </h3>
 
-目前已将 `LvBan v1.5` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
-
+- 目前已将 `LvBan v2.0` 版本部署到modelscope平台，地址: [https://www.modelscope.cn/studios/NumberJys/LvBan](https://www.modelscope.cn/studios/NumberJys/LvBan)
+- `LvBan v2.0` 版本服务器部署链接：[http://120.27.156.91:1234/](http://120.27.156.91:1234/)  [https://1696-120-27-156-91.ngrok-free.app/](https://1696-120-27-156-91.ngrok-free.app/)
 <h3 id="1-2">本地部署 </h3>
 
 ```bash
@@ -157,9 +162,12 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
   
 - 大语言模型：星火大模型(Spark3.5 Max)
 - 图片理解模型：星火图片理解模型
+- 图片生成模型，星火文生图模型
 - 语音合成模型：星火语音合成模型
+- 语音识别模型：星火语音识别模型
 - 向量模型：星火文本向量模型
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0.png" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B01.png" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B02.png" style="zoom:40%;" />
   
 <h3 id="2-2"> 基于本地旅游攻略pdf文本文件的RAG系统 </h3>
 该项目的RAG系统，首先从用户的查询中提取关键信息（如城市名称、地点名称等），并通过这些信息检索匹配的pdf文件，提取相关内容并计算其嵌入向量。然后利用BM25检索和向量检索技术，筛选出与用户查询相似度较高的文本块。在此基础上，利用重排序模型对这些文本块进行进一步排序，最终选择最相关的内容提供给星火大模型。星火大模型根据这些上下文信息，生成对用户问题的准确回答。其详细技术实现流程：
@@ -189,9 +197,9 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
   - 1. 将重排序后的文档片段整合，并形成模型输入（通过指定的格式，将上下文和问题整合）。
   - 2. 调用ChatModel(星火大语言模型)生成最终回答，并返回给用户。
 
-<h3 id="2-3"> 多模态生成：图生文，TTS和数字人视频合成 </h3>
+<h3 id="2-3"> 多模态生成：图生文，文生图，TTS，ASR和数字人视频合成 </h3>
 
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90.gif" style="zoom:40%;" />
+<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%94%9F%E6%88%90v2.0.png" style="zoom:40%;" />
   
 通过将文本数据处理成音频数据后同视频一起输入，先使用脚本处理视频，该脚本首先会预先进行必要的预处理，例如人脸检测、人脸解析和 VAE 编码等。对音频和图片通过唇同步模型处理，生成对应唇形的照片，匹配所有的音频，最终将音频与生成的图片合成为视频输出。
 
@@ -208,7 +216,26 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 运行asr.py即可
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/asr.png" style="zoom:40%;" />
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/asr_record.png" style="zoom:40%;" />
-  
+
+
+<h2 id="3"> 案例展示 </h2>
+
+- 旅游规划助手
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E6%97%85%E6%B8%B8%E8%A7%84%E5%88%92v2.0.png" alt="Demo" >
+- 知识库问答(RAG:true)
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94v2.0_1.png" alt="Demo" >
+- 知识库问答(RAG:false)
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94v2.0_2.png" alt="Demo" >
+- 附近查询&联网搜索&天气查询
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E5%AE%9E%E5%86%B5%E6%9F%A5%E8%AF%A2v2.0.png" alt="Demo" >
+- 旅游文案助手
+  <img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E6%97%85%E6%B8%B8%E6%96%87%E6%A1%88v2.0.png" alt="Demo" >
+
+
+
+<details>
+<summary>LvBan_v1.5案例展示</summary>
+<br>
 <h2 id="3"> 案例展示 </h2>
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%97%85%E6%B8%B8%E6%94%BB%E7%95%A5.png" alt="Demo" >
@@ -218,6 +245,7 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%81%94%E7%BD%91%E6%90%9C%E7%B4%A2.png" alt="Demo" >
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%96%87%E6%A1%88%E7%94%9F%E6%88%90.png" alt="Demo" >
 </p>
+</details>
 
 <h2 id="4"> 人员贡献 </h2>
 

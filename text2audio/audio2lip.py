@@ -1,9 +1,11 @@
 import requests
 import time
 import os
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
-api_key =  os.getenv("x_api_key")
+
+
+# api_key = os.environ.get("x_api_key")
+api_key = "283b1d46-33e7-47fc-8cee-2a50f9ab38f7"
+
 def submit_lipsync_task(video_url, audio_url, model="wav2lip++", synergize=True):
     url = "https://api.synclabs.so/lipsync"
 
