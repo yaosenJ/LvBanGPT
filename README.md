@@ -162,7 +162,6 @@ TAVILY_API_KEY=tvly-GH9Ma7CZyvmZK8Uq
 - 语音合成模型：星火语音合成模型
 - 语音识别模型：星火语音识别模型
 - 向量模型：星火文本向量模型
-- 
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B01.png" style="zoom:40%;" />
 <center><img src="https://github.com/yaosenJ/LvBanGPT/blob/LvBan_v2.0/img/%E8%AE%AF%E9%A3%9E%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B02.png" style="zoom:40%;" />
   
