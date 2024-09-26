@@ -80,6 +80,7 @@
 **开源不易，如果本项目帮到大家，可以右上角帮我点个 star~ ⭐⭐ , 您的 star ⭐是我们最大的鼓励，谢谢各位！** 
 
 ## 🎉 NEWS
+- [2024.09.26] **发布LvBan v2.0**演示视频：[https://www.bilibili.com/video/BV1wPxuepEBG](https://www.bilibili.com/video/BV1wPxuepEBG)
 - [2024.09.24] 全新优化界面，**发布LvBan v2.0**
 - [2024.09.20] 增加**语音识别对话**模块
 - [2024.09.05] 增加**文生图**模块
