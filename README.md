@@ -27,19 +27,20 @@
 - 生成语音，生成图片和数字人视频全部可预览查看、下载，提高体验
 
 ## 项目整体功能逻辑流程图
-<center><img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/LvBan%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="image-20240131182121394" style="zoom:100%;" />
+
 
 ## 项目演示
+
 
 <details>
 <summary>LvBan_v1.5项目展示</summary>
 <br>
-<h2 id="3"> 项目展示 </h2>
-  
+
 - 旅游规划助手
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E8%A7%84%E5%88%92%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
 </p>
+
 
 - 旅游问答助手
 <p align="center">
@@ -50,6 +51,7 @@
 <p align="center">
   <img src="https://github.com/yaosenJ/LvBanGPT/blob/main/img/%E6%96%87%E6%A1%88%E5%8A%A9%E6%89%8B.gif" alt="Demo gif" >
 </p>
+  
 </details>
 
 
