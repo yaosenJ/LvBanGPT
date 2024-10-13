@@ -586,7 +586,7 @@ def agent_execute(query, chat_history=[]):
     while True:
         history = '\n'.join(['Question:%s\nAnswer:%s' % (his[0], his[1]) for his in chat_history])
         today = datetime.datetime.now().strftime('%Y-%m-%d')
-        prompt = prompt_tpl.format(today=today, chat_history=history, tool_descs=tool_descs, tool_names=tool_names, query=query, agent_scratchpad=agent_scratchpad)
+        prompt = prompt_tpl.format(today=today, tool_descs=tool_descs, chat_history=history, tool_names=tool_names, query=query, agent_scratchpad=agent_scratchpad)
         print('\033[32m---等待LLM返回... ...\n%s\n\033[0m' % prompt, flush=True)
 
         response = llm(prompt, user_stop_words=['Observation:'])
